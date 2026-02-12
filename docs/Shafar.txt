@@ -1,0 +1,86 @@
+The Hospitality Operational Blueprint: Executive Interview
+
+
+Interviewee: Shafar Jamaludin (GM, ANA Crowne Plaza Kobe) Duration: 15 Minutes (Fast-Track)
+
+Module 1: Economic Friction & The Cost of Silence (4 Mins)
+Goal: Quantify the "invisible" revenue leakage that Legacy Systems fail to capture.
+
+The Information Silo: You’ve managed complex properties from KL to Kobe. When a guest has a negative experience due to siloed data (e.g., "the right hand doesn't know what the left is doing"), how does that operational "noise" manifest in the Front Office workload?
+
+11 tahun living in Japan, Thailand 7 yrs, China 4 thun, Indonesia 6 thun, basically hotel works, different aspect and elements, just like any operation non of them fully independant, one party needs to ensure work properly or else the other party might not function properly, macam meja, require all 4 legs to function properly. Satu patah the whole hotel tumbang, ada F&B, restaurant, kitchen, engineering, everything must fulfil the responsibilityes or the whole operation suffers. In case of communication breakdown - kalau meja patah satu kaki then the whole operation falls. Kalau hsekeeping x cuci bilik betul - complain will be hotel ABC teruk, engineering x service aircond - panas ke apa - not say engineering teruk, its the hotel teruk. My job is to ensure all parts fulfilling their part. Complain of something unrelated - housekeeping should escalate the complain to FO - so that compensation and recovery can be done once checkout - ensure satisfaction.
+
+
+
+The Labor-Tech Trade-off: When facing high operating costs or manpower shortages, many properties default to "hiring more" or "buying furniture." In your experience, what is the most expensive "remedy" hotels buy that fails to solve the underlying churn of guests?
+
+One of my worse experience is quest - check-in kiosk. Four Seasons KL, paying 800-1000 per night. Get the feeling ada orang angkatkan bag, tanyakan you. Even I as a hotelier, I tak berapa suka I check-in pkai kiosk - I would expect human interaction. Sometime technology is technology's worse enemy. Ada tehcnology yg x sempat lagi catchup. Dulu, I tried to install check-in kiosk at few hotels - all ada but check-in credit card reader not working - not connecting, cannot connect to bank. At the end of the day something you though give guest a good experience, gives bad experience. There's a hotel in JP that boasts can check-in in less than 4s. Cut your losses while you can. Banks will always update higher security - hotels too due to data protection. Technology, automation robotics what else can we do? Manpower- MY, ID, JP same - huge shortage of manpower - have to go to resort to ambil foreign labor - problem - get the labor not skilled enough - have to find time for them to train. Depend on the pricing - if its feasible. Using robot -
+
+Robot lupa sudu? Now doing a lot of research on where to use robotics - lobby not staff - use robots - lap lantai - malam polish. Corridor, carpet vacuum - no longer use 3-4 staff now use robots. Some application still need human touch - especially in hotel. You're paying for the service - needs to be delivered by humans. Thank you will be different on how the guest seem to look like - can only be evaluated by humans. Mak cik nak terberak, family ada anak kecik.
+
+
+
+The Retention Leak: We often talk about Lifetime Value (LTV). Tell me about a time a high-value guest disengaged simply because the "system" failed to recognize their history or preferences. What is the estimated opportunity cost of that "forgotten" relationship?
+
+Cost is incalculable - but its big - if you use loyalty of a guest, you can estimate - example En Basyir used to come to my property 2x a week travel to KL, Johor stay in Johor stay and balik -  can be 2 years because once promoted can become boss and no more travel. Also once promoted more income can stay a week instead of 2 nights. It depends. Recently I got a comment from one guest, not happy befiore coming to Kobe, was staying in Sydney property. Stayed in Kobe, he wrote a comment - I was hoping that you guys could do some recovery to make things better - Kobe did not know this happened prior - this would be my last day with this group - $8-10k/month of loss business. There's no official program to compensate. A rule of thumb withi the industry - try to make sure if they had a bad experience before, when they come to the property they do not go through the same thing.
+
+
+
+Module 2: The Enterprise System Paradox (4 Mins)
+Goal: Understand why $100k+ Legacy Enterprise Solutions (like Opera/Marsha) still require manual workarounds.
+
+Analog Workarounds: Despite having robust Enterprise Resource Planning (ERP) tools, what is the one critical task your team still performs via unstructured channels (WhatsApp, manual Excel, or verbal updates)? How many hours of "Management Debt" does this create weekly?
+
+Wow - if asked 3 yrs ago - I could give you a long list. In the past 3-5 years, a lot of things, people have listened to us. The legacy players Opera, Sunsystem, SAP has listened to industry - a lot of things had gotten much better now - can live without printing a single piece of paper. Excel - usually due to someone outside giving this for adhoc team. Opera & Micros (POS) used to not talk to each other. Oracle bought Opera and Opera bought Mikros - now talk to each other. A tone time need to export finance - its own syste - need to export CSV previously. Now the systems a re integrated - things are happening real time - updating each other each 5ms. If housekeeping nampak lampu terbakar, need to report and jump from one department until engineering - now no longer. Now dengan handphone can download app - can message to each different department to do different parts. Even scheduling also already online.
+
+
+
+The Utilization Gap: In your experience with Tier-1 systems, which high-cost module is the most consistently underutilized? During budget reviews, what is the strategic justification usually given for maintaining these low-utility, high-cost platforms?
+
+Within Opera - there's always the banquet booking system - Delphi - for sales and marketing and banquet management - within Opera they tried to create their own - everyone other than Opera also did the same. Because the module is included, they increased the price - the function does not meet the need. Some time need to pay for external system like Delfi, CNM (part of Fidelio) - just to run the system. In Japan BV also very popular. Gap: banquet space blocking - some hotels the ballroom can separate into 3 - some system can separate them nicely - translate into useful statistic later. The costing, pricing, the total invoicing - some system cannot do it nicely - catering. CRM - good have good security features - given approval to be interface to the PMS, some tak because security is not strong enough. Personal data, sensitive - satu nama terbocor $1mil if US registered company. The repercussion of not having it doen properly. Few years ago Mariott database - leaked to public - had to pay US several millions on penalty. Opera ada jahat - few years ago had this one vendor - want to use his application, his software - new player - wanted to bridge his system with Opera. Opera said they will give you the key to their backend - $25k.
+
+
+
+The "Invisible" Interface: You’ve seen US-brand standards vs. local boutique needs. What is the specific "Must-Have" functionality that global brands provide, which local Asian software providers consistently fail to replicate?
+
+ANA under IHG (UK based), need to JV with ANA (airline brand) when they want to come into Japan - local partner. Security. US and EU companies are very tight and nervous about system security. No matter where they operate, they still have to abide the laws where their company is incorporated. UK have to follow EU ruling which is thighter/stronger than US. 90% of the time EU/US is stronger than locals. MY PDPA - selamba je tunjuk2 IC, borang2 guest ada IC, phone number, address etc. Now if you ask credit card number, none is stored - either digitally or any piece of paper. You have the right to say don't keep my data (erase my data).
+
+
+
+Module 3: The Procurement Velocity & Decision Logic (4 Mins)
+Goal: Map the journey from "Problem" to "Paid Contract."
+
+The Anatomy of a "Yes": Thinking back to your last major technology implementation:
+
+The Champion: Who was the internal driver?
+
+Every property will have IT manager - the driver
+
+The Friction Point: Who was the most vocal skeptic, and was their concern rooted in transparency or "operational change" fears?
+
+The finance - finance director - will typically debate even though murah/patut
+
+The Closer: What was the final "Value Statement" that convinced the Owner/Stakeholder to sign the check?
+
+With the General Manager - yang buat dirty job, kena marah and maki hamun - communicate directly with the owner/stakeholder. One of the most important lesson is to manage owner not property. If owner is happy, property will be happy.
+
+
+
+The Owner/Operator Tension: In the Malaysian and Japanese markets, how often do Owners (e.g., UOA, IHG partners) block tech investments that the GM views as critical? What is the most common "Red Flag" they cite to kill an innovation budget?
+
+Very rare that we face owners stopping or become a hurdle to technology because for us as the operator. We make sure that we just don't ambil tangkap buat je. We do the due dilligence. Do we need to ahv eit. Whats the cost efficiency, ROI. If the return is worth it we go back to owners. If not we simply stop it. Where they stop at the end of the day is related to cost. Cost is too high or return is too long. If cost is high but return is quick then have the chance to get through. If order now needs immediately. Beli 20k how much ppl I can save by when.
+
+
+
+The Adoption Red Flag: Once a contract is signed, at what month do you typically see "Solution Decay" (where staff stop using the tool)? Is it usually a technical failure or a data security/compliance fear?
+
+Module 4: Market Signal & Pilot Success (3 Mins)
+Goal: Define the "Minimum Viable Win" for a GM.
+
+The Successful Pilot: For a General Manager at your level, what constitutes a "successful trial"? Is it purely a ROI number, or is it a specific reduction in "Response Latency" or "Staff Burnout"?
+
+The Regional Shift: Having moved from the Malaysian market to Japan, what is the biggest "Operational Blind Spot" that Japanese tech solves, which Malaysia is still handling with manual labor?
+
+
+
+Next week Tuesday 4-5pm Japan. To send the appointment.

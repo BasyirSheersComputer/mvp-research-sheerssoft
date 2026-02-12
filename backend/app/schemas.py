@@ -1,0 +1,125 @@
+"""
+API route schemas — Pydantic models for request/response validation.
+"""
+
+import uuid
+from datetime import datetime
+from decimal import Decimal
+from pydantic import BaseModel, Field
+
+
+# ─── Conversations ───
+
+class MessageRequest(BaseModel):
+    """Incoming message from any channel."""
+    message: str = Field(..., min_length=1, max_length=4000)
+    guest_name: str | None = None
+
+
+class ConversationResponse(BaseModel):
+    """Response returned after processing a guest message."""
+    response: str
+    conversation_id: str
+    mode: str
+    is_after_hours: bool
+    response_time_ms: int
+    lead_created: bool
+
+
+class WebChatStartRequest(BaseModel):
+    """Start a new web chat conversation."""
+    property_id: str
+    message: str = Field(..., min_length=1, max_length=4000)
+    guest_name: str | None = None
+    session_id: str | None = None  # Browser session ID for continuity
+
+
+# ─── Leads ───
+
+class LeadResponse(BaseModel):
+    id: str
+    conversation_id: str
+    guest_name: str | None
+    guest_phone: str | None
+    guest_email: str | None
+    intent: str
+    status: str
+    estimated_value: float | None
+    captured_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
+class LeadUpdateRequest(BaseModel):
+    status: str | None = None  # "new" | "contacted" | "converted" | "lost"
+    notes: str | None = None
+
+
+# ─── Properties ───
+
+class PropertyResponse(BaseModel):
+    id: str
+    name: str
+    whatsapp_number: str | None
+    website_url: str | None
+    adr: float
+    ota_commission_pct: float
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
+PropertyInDB = PropertyResponse
+
+
+class PropertyCreateRequest(BaseModel):
+    name: str = Field(..., min_length=1, max_length=255)
+    whatsapp_number: str | None = None
+    website_url: str | None = None
+    operating_hours: dict | None = None
+    adr: float = 230.00
+    ota_commission_pct: float = 20.00
+
+
+# ─── Knowledge Base ───
+
+class KBDocumentInput(BaseModel):
+    doc_type: str = Field(..., pattern="^(rates|rooms|facilities|faqs|directions|policies|dining)$")
+    title: str = Field(..., min_length=1, max_length=255)
+    content: str = Field(..., min_length=1)
+
+
+class KBIngestRequest(BaseModel):
+    documents: list[KBDocumentInput]
+
+
+class KBIngestResponse(BaseModel):
+    documents_ingested: int
+    property_id: str
+
+
+# ─── Analytics ───
+
+class AnalyticsSummaryResponse(BaseModel):
+    total_inquiries: int
+    after_hours_inquiries: int
+    after_hours_responded: int
+    leads_captured: int
+    handoffs: int
+    avg_response_time_sec: float
+    estimated_revenue_recovered: float
+    channel_breakdown: dict | None
+
+
+# ─── Auth ───
+
+class LoginRequest(BaseModel):
+    email: str
+    password: str
+
+
+class TokenResponse(BaseModel):
+    access_token: str
+    token_type: str = "bearer"

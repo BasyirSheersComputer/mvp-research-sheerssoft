@@ -1,0 +1,140 @@
+Amsyar (Revenue Manager IHG Doha)
+
+- prefer meeting early of week (starts work on Sunday-Thu)
+
+
+
+Q1. Hard data - Revenue role - kitorang x face customer, revenue team x face customer - the strategic brain of sales, not bawah sales - tak report to sales - dept revenue set the price - thats what we do, manage demand, functions, kalau sales bawak group at a aparticular price, can take?
+
+- negotiation - asking what is the gap - a lot
+
+
+
+1. Guest - rooms - everything is almost quantifiable - though a lot of soft things unquantifiable - have  direct impact to revenue performance - what makes guest keeps coming back - why out of a lot of properties - they still choos this
+
+- if we can do a system that captures a conversation of guest with reservation agents/AI - what are the most common keywords - what are the words talked about before confirming booking - or what are most common keywaord when guest give their stay feedback
+
+- system that can track if the client stay here - waht make /break the stay for guest - can be used for marketing/revenue to advertise - revenue dept is the one telling marking where to focus the advertising - this period is corporate - targetting; this period is family from the UK
+
+- if not marketing spending will be very expensive - at the same time, if we know what makes/break the guest experience in the hotel, the operations team can prepare in advance - to get a returning guest is cheaper than a new guest- once a guest is loyal to a property, they will start to spend more on misc.
+
+- on avg guest that is returning, they would spend an average $60 more than a new guest
+
+- all of that can only be done if we can measure the guest punya soft spot - what is the deciding factor that makes the guest decide to continue choosing the property
+
+- the more a hotel know what their str and weakness is to a guest perspective, the better
+
+- there is a biased when the house is yours - guest will feel differently - gap between house owner perception ad the guest who are staying
+
+- dalam service industry - break into 2 - hardware & software - the building cannot renovate unless owner says so, the things that can change is software - people & service - tackling this - the guest coming to the property is very concerned if they are recognised by name
+
+- "Hi Mr. Basyir, welcome to Intercontinental Hotel, DOHA" - feels very different - but it needs to be very quantifiable - some guest are particularr of dining, some about the beach
+
+- if all of that tally from check-in unil check-out - then know this is what to focus in
+
+- can turn into money - capture, quantify/track/measure - make use on it
+
+- revenue dont think about profitability, finance does, revenue fikir top line je
+
+
+
+2. Kebanyakan bilik - rev mgmt system for rooms is very integrated - can link between systems IDS-Opera-TravelClik
+
+- can track preference, timing of check-in, how much avg length of stay, guest in house - can do projection and compare with same time Feb last year. the revenue dept is the dept of data center
+
+- but cannot be that efficient when it comes to F&B - focus is very slow - not much exposure to F&B - R&B(restaurants & bar), C&B(conference & banquetting) - this is the area where if hotel do it well, you'll be a millionaire
+
+- RevPAR - bilik tu jual ke tak kena tengok the yield from the room - RevPerAvailableSeatPerHour (RevPASH) - bar - biggest in the world - can seat up to 750 pax - right now from opening to closing - how much am I getting per seat per hour?
+
+- if just RM1 - 1 day RM6k je? macam tu baik tutup - what are thing s we can do to increase the RevPASH - how to make sure that everone walking through that door orders sit down and order more and more - menu engineering - x ramai Chef who knows how to design menu engineering
+
+- R&B fix menu engineering & increase RevPASH - fix menu engineering to increase RevPASH
+
+- C&B - catering space can do yielding - RevPSM (RevenuePerSqreMeter) - how much generated per square space of the meeting area - every hotel have grand ballroom - can pecah 2 or 3 ballrooms - some guest only one Ballroom 1 only, some want 1 & 2 dont want 3
+
+- if today is Wednesday - if someone book B2 (tengah) - for 3 days Wed-Fri - ballroom 1 & 3 empty, if someone need 2 ballroom , 3 days no revenue - if someone takes B1, how many days in advance need to confirm lead time (lock time)
+
+- if can create system taht can tell each and every meeting space - meeting occupancy - in 3 days how many percantage utilisation - if someone if totake B2 not 1 & 3, what should be the charge
+
+- it covers back in case of underutilisation - wedding - typically only 1 night - take the entire ball room - just 1 night - if there is an event yg dtg, nak ballroom 1 je for 5 hari, clash - need a logic to justify which one to pickup
+
+- if the event is 5 days but only for 100 pax, priority to wedding - system to quickly help catering team based on the input, whcih should be prioritised
+
+- guest from overseas will stay at hotel - both rooms and ballroom - better to take this more than the wedding - optimize RevPSM - hotels will buy you
+
+
+Continue from earlier meeting
+
+
+
+- Delphi - allow to block meeting space, make reservation in the meeting space, record all definite tentatives, turn down group, pull the report & do things manuallly - conversion, meeting
+
+- Hilton KL - 2 floors meeting space; Shangri-La meeting space - entire basement
+
+- IC KL, L1 & the entire L2 is their entire meeting area
+
+- resort meeting space kecik2
+
+- IC DOHA has meeting space kecik2 can fit 60 pax
+
+- city hotel need the rev from meeting space
+
+- grandballroom - Mon - Sun - what is the % utilisation in 30 days? - compared to B3 (80%) - need to know the utilization% of all ballroom
+
+- say if ppl want to take Sat grandballroom need to potentially get 80-100k min - automatically team will know can take or not
+
+- know by day the utilisation
+
+- factors: elad time, min spending, contribution to bedroom, contribution to outlet, are tehy regular?
+
+- IC DOHA - hotel kecik - wedding akan datang setahun sebelum, all other revenue need to reject - wedding need 6mth-1 years - corporate meeting will enquire spaces max 2mths from the event space
+
+- Use mylighthouse to know the forecasted demand of room pricing - if low demand just take - for Aug its summer temps can go up to 46C - low demand - December demand is high
+
+- teh system is so good, can know coming from which airport, avg stay how long - no such detailness for outlets & meeting spaces
+
+- kalau boleh target for Dec, the demand from where, then in advance kita boleh tahu - and tell to sales team to talk to which industry to ask for events
+
+- my advice is jangan focus pada bilik - dah banyak orang buat - everyone wanted to tap - because easiest - can access the data via Opera - but nothing for F&B
+
+- tested Avero - system x user friendly - macam main dengan Excel punya pivot table - Amsyar a revenue person very good with graph not numbers - revenue is not finance, many not comfortable with numbers - just want to see trends and story behind the trends
+
+- Avero fits the number directly into Micross - R&B cashierig system - no demand forecasting - need to customize dashboard - not interested - say
+
+- Say max use is Stella pint, Heineken is not taking off, it will expired, how can I move the product - packaging/bundling? - which food
+
+- Does tell quantity but does not tell what's next
+
+- Compared to mylighthouse - can see the performance of Oct 2024 vs Oct 2023 in terms of ADR etc. - am I ahead or behind by ADR, Revenue - also can see most the pickup is how many days before
+
+- No KYC for F&B especially preference & purchase behaviour
+
+- Know where the customer come from - OTA - Booking .com majority - can tell the sales/marketing to thatguest book direct instead of Booking.com
+
+- can tell to marketing - to that country this are the message
+
+- marketing is very expensive - flyers, licensing - Qatar need license from govt to post SocMed (1,500/post), hire designer
+
+- Qatar - KL 7.5 house (KLIA is top 5 most connected airport in the way - fees is higher)
+
+- Spa has 16 bilik treatment - thats why have dir of spa - utilisation of therapies - most high selling products in spa - most utilised treeatments
+
+- Malaysia is ranked as top 5 cheapest luxury properties in the world - IC DOHA can get 600k rev for New Years - Malaysia do price war - DOHA when no demand then not drop drastic as compared to KL
+
+- in IC Doha - we put customer first - we chose our customer - price is also perception of value
+
+- its all about how GM control the owner - Owner wants GoP of 7mil this year
+
+- outlet managers will tell the problem - typically focus on ops - kena cari org yang bijak - revenue, ppl, space, commercial acument, financial acument - makes decision based on 2 info feeder - cost controller (finance); topline (revenue team)
+
+- recommend Hilton KL - do a good F&B control - so big - 10 outlet - has F&B revenue manager and room revenue manager sendiri - try to find whos the F&B revenue manager Hilton KL & PJ
+
+- Rooms 70% profitability, F&B 35% profitability - Hilton F&B RevMgmt have weekly rev meeting - performance of current month - whats the revenue items proposing for the next 3 months
+
+- KPIs - forecast accurecy - meeting/exceeding budget (meeting target) - YoY growth - inflation is the baseline - revenue growth must grow more than inflation
+
+- +60122790305
+
+
+
+Amsyar has already tendered resignation and will be last in IC Doha by 12 Feb 2026. He will join Accor Resort in Doha.

@@ -1,0 +1,80 @@
+Service Standards & Team Workflow
+
+Core Priorities: Focus on the speed and quality of service.
+
+Response Times: A response time of 3–5 hours is currently considered normal.
+
+Team Composition: Operations are handled by 3 sales staff and 2 coordinators who reply to inquiries on behalf of the team.
+
+Workflow Gaps: A primary operational weakness identified is the systematic follow-up on inquiries.
+
+CRM Usage: A CRM system is available, but it is not being utilized to its full potential; the process remains heavily dependent on human intervention.
+
+Market Dynamics & Occupancy
+
+General Performance:
+
+Average monthly occupancy: Approximately 80%.
+
+Year-end occupancy: Typically reaches 90%+.
+
+No-Shows: Clarified that standard no-shows are typically 3–4 per day (not 20–30 daily), and these are usually from the corporate segment.
+
+Pricing Strategy: Prepaid bookings remain the cheapest option.
+
+Operational Demands: Because the hotel is in a "hot location," speed of service is critical for daily operations.
+
+Rate Integrity & Best Rate Guarantee (BRG)
+
+System Latency: Discrepancies often come from Accor HQ due to currency exchange fluctuations or latency in OTA rates.
+
+Static Rate Limitations: Accor and Marriott have very limited static rate options for travel agents.
+
+Only 6% is allocated for static rates.
+
+These are for contracted agents only, not for wholesalers.
+
+Reporting: Issues are escalated to Accor HQ; while sales are often not "lost," these instances cannot be claimed under BRG if they stem from external platform errors.
+
+
+Demand & Channel Distribution
+
+Segment Breakdown:
+
+OTA (Public) + Website: Accounts for 60% of total demand.
+
+Corporate: Accounts for 20%–25% of demand.
+
+B2B: Primarily travel agents; notably, Accor does not allow static rates for this segment.
+
+Booking Channels: Bookings come via the website, email, and phone calls.
+
+Strategy: Accor is actively trying to eliminate phone calls in favor of 100% system-based bookings.
+
+Reservations & Operations
+
+Team Structure: 1 Reservations Manager, 1 Supervisor, and 1 Agent.
+
+Email Management: The team handles approximately 100 emails daily.
+
+70% of these are processed through the system automatically.
+
+30% require manual checking and intervention.
+
+Workload: On busy days (Wednesdays and Thursdays), the total volume of calls and emails can reach 200–300.
+
+Staff Challenges: Managing the backlog on busy days can require an extra hour of work to keep operations manageable.
+
+Rate Integrity & Performance
+
+Rate Leakage: Metasearch sites are identifying lower rates elsewhere compared to the official website.
+
+Identifying this leakage is considered a Key Performance Indicator (KPI) for managers.
+
+Best Rate Guarantee (BRG): Last month, there were 4 validated BRG claims through Accor.
+
+Example Case: A room rate of RM 300 on the internal system was found on Agoda for RM 150.
+
+No-Shows: During high-demand periods, the property sees only approximately 20–30 monthly no-shows.
+
+Conversion: Conversion for phone calls (typically related to travel agent static rates) is above 90%.

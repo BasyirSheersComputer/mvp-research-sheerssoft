@@ -1,0 +1,36 @@
+Meeting Notes: Zul of Vivatel KL
+Date: January 5, 2026 Participant: Zul (Reservation Manager)
+
+1. Demand Segmentation
+Government (Gov): Accounts for 40% of demand.
+
+OTA (Online Travel Agents): Accounts for 35%.
+
+Corporate: Accounts for 20% (Note: In October and November, Corporate demand generally exceeds Government demand).
+
+2. Booking Distribution
+Direct Bookings: Only 10% come through the website.
+
+Manual Channels: 90% of bookings come from walk-ins, phone calls, WhatsApp, and email.
+
+Daily Volume: There are over 30 combined daily touchpoints via call, WhatsApp, and email.
+
+3. Operations & Pain Points
+Peak Staffing: 3 people are on duty from 9:00 AM to 6:00 PM.
+
+Staff Assignment: 1 person is assigned specifically to "catch all" calls and emails.
+
+After-Hours Gap: Once office hours end, reservations and sales are closed, and inquiries are effectively dropped.
+
+Customer Behavior: Guests frequently inquire about why rates are cheaper on OTA platforms.
+
+Conversion Tracking: Currently, conversion is only tracked "roughly" via occupancy.
+
+Financial Metric: Average Daily Rate (ADR) calculation noted at RM 230 x 4 = RM 920.
+
+4. Action Items
+Pilot Program: Zul confirmed the relevance of the solution and agreed to a 1-page pilot.
+
+Strategic Next Step: Send the 1-page pilot today.
+
+Approval Process: The General Manager usually invites Zul to propose new solutions to them.

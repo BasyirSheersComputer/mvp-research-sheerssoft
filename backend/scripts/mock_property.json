@@ -1,0 +1,25 @@
+{
+  "name": "Mock Hotel KL",
+  "whatsapp_number": "60123456789",
+  "notification_email": "reservations@mockhotel.com",
+  "website_url": "https://mockhotel.com",
+  "operating_hours": {
+    "start": "09:00",
+    "end": "18:00",
+    "timezone": "Asia/Kuala_Lumpur"
+  },
+  "adr": 300.00,
+  "ota_commission_pct": 18.00,
+  "kb_documents": [
+    {
+      "doc_type": "rooms",
+      "title": "Room Types",
+      "content": "Mock Hotel offers Deluxe Rooms (RM 300) and Suites (RM 500)."
+    },
+    {
+      "doc_type": "faqs",
+      "title": "Breakfast",
+      "content": "Breakfast is served from 7am to 10am."
+    }
+  ]
+}

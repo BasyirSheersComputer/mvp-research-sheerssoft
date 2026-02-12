@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vivatel KL - Widget Test</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url('https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            border-radius: 16px;
+            max-width: 600px;
+            text-align: center;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(5px);
+        }
+        h1 { color: #1e293b; margin-bottom: 10px; }
+        p { color: #64748b; line-height: 1.6; }
+        .btn {
+            display: inline-block;
+            background: #0f172a;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            margin-top: 20px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to Vivatel KL</h1>
+        <p>Experience luxury in the heart of Kuala Lumpur. This is a demo page to test the AI Concierge widget.</p>
+        <p>Look for the chat icon in the bottom right corner! ↘️</p>
+        <a href="#" class="btn">Book Now</a>
+    </div>
+
+    <!-- Floyd AI Widget -->
+    <!-- Ideally we fetch the property ID dynamically or prompt the user. 
+         For now, we'll use a placeholder and instruct to replace or use the one from seed data. -->
+    <script 
+        src="http://localhost:8000/static/widget.js"
+        data-property-id="REPLACE_WITH_ACTUAL_PROPERTY_ID"
+        data-api-url="http://localhost:8000"
+        data-color="#0F172A"
+    ></script>
+
+    <script>
+        // Helper to grab property ID if testing locally with seed script
+        // In a real scenario, this is hardcoded.
+        // We can try to fetch it if we had an endpoint, or just ask user to replace it.
+        // For dev convenience, let's log a message.
+        console.log("Don't forget to replace data-property-id with the UUID from the seed script output!");
+    </script>
+</body>
+</html>

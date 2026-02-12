@@ -1,0 +1,103 @@
+2nd Interview with Bernard - TravelClick
+
+
+
+Both - personalisation changed post COVID - use resources at the right place -> putting op notes old school , no more
+
+hotel , wait to remind to adopt tech , data is there , how to use data to reach out , help the staff , ecommerce , how to do upsell / cross sell.
+
+Hotelier always behind in tech , airlines always faster , a lot of hotels don't want change
+
+GMs understanding , adopting of tech as a cost , very hard for owners "I pay pms for few months, do not do anything for me , xyz offer cheaper & do more.”
+
+Educating owners investing 5000 give you 100k. Understanding for independant owners
+
+Think why Big brands invested multimillion dollar in tech? - think that way. adopting changes & willing to invest.
+
+Analogy : “if you a grab driver , using Proton Saga , only cheap rides , invest more then can get 7-seater ride
+
+Currently hard , the moment you justify the business case
+
+Especially if you're new in market , they engage you to be tailored, big players already have solid business case they use to pitch
+
+Give the alignment on numbers to be fair , need to have a template
+
+99% of the hotel , the main pain is paying the OTA , if I could switch acquisition from OTA to your website say 1% -> 3000 saving per month.
+
+Join more of those forum ITP Asia , a lot more AI chatbot
+
+start to partners with some university -> hospitality , poli-techniques -> lecture
+
+
+
+-> Now ppl use AI -> don't even go to OTA
+
+-> GEO -> mainly for AI , generative engine optimization - make FAQ be user friendly for AI search, every web dev is focusing in GEO
+
+SEO -> optimize search
+
+Not priority (referring to Question 3: leakage from unattended inquiry and whether GMs is willing to pay to solve it), Priority is money generating , operating efficiency
+
+"Do you get this kind of inquiry, how do you display"
+
+"wellness , gym , spa , nutrition" -> not optimise
+
+Who are you selling to - FAQ - family for resort -> impacting conversion
+
+simple research -> go to website & see how they're selling , go inside as if you're interested in booking ->  if booking engine & website is well you you can't do. know how good the property do
+
+ask GMs "what is your dream, that you want to do with tech, that you can't do
+
+
+
+
+
+Conclusion: Groundwork - deck to trigger that conversation - a lot are willing
+
+Bernard wants his intention to consult , need to set in deck / proposal -> get his idea on how he's willing to get involved.
+
+He mentioned some GMs are tech savvy & will drill down quite deep, need to be prepared at least need to know the numbers
+
+
+
+Meeting notes - 14/1/2025 (10:30 am)
+
+Based in SG. Worked in hospitality all his life. Background in operations - front office, housekeeping, very passionate about hospitality. Previously with Opera (Oracle) for 2 years. Understand PMS system very well. Now in Sales and Catering system. Work as a implementation consultant with TravelClick a US GDS.
+
+Hotels wanting to sell rooms uses 3 channels: 1. OTA; 2. Booking engine (typically internal website); 3. Global Distribution System (GDS).
+
+GDS use by airlines to find a flight, room, car.
+
+Amadeus acquired TravelClick in 2019 to complete the full stack.
+
+Air Asia uses Navita by Amadeus to suggest addons such as Nasi Lemak
+
+GDS also used by airport operations e.g KLIA have kiosk for autocheckin, conveyor luggage, scanning of face. Enables traveller after booking flight to immediately book rooms (Travel Click).
+
+Goal is end-to-end from airport to hotel w/o taking out passport. Example use of online key system by Marriott Bonvoy. Involve a lot of regulations and worked out with Singapore Tourism Board.
+
+Now expanding to a Travellers ID which is related to data privacy. Eg. for JW Marriott the traveller experience from first touch, emails, notifications, journey until checkout (his role is more towards hotel focus)
+
+His specialist is more towards: reservation solution, CRM, CMS.
+
+He is a presales specialist. The go-to for interview with hotel GMs understanding pain points, giving consultation then preparing proposal, pricing from custom tailor made solutions.
+
+On Digital Driveway:
+
+Looking at GM bottom line
+
+What makes a hotel successful 20-30 years ago - remarkable service
+
+now approach changed
+
+to know what you want, can spam with related promos
+
+last year's survey: out of 5-6k hoteliers more than 60% said don't mind being bombarded by related promos
+
+"What pillow do you like" "Everytime you book, you come with family, have 2 kids, bring parents, prefer corner room, facing win tower"
+
+"You used to stay for 10 nights, come back to stay for 10 nights, we'll give you 30% off."
+
+Meeting ended on a short notice as he have another call at 11am.
+
+To send another invite agreed for same time this Friday.
