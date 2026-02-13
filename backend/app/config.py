@@ -11,6 +11,7 @@ class Settings(BaseSettings):
 
     # Database
     database_url: str = "postgresql+asyncpg://sheerssoft:sheerssoft_dev_password@localhost:5432/sheerssoft"
+    redis_url: str = "redis://localhost:6379/0"
 
     # OpenAI
     openai_api_key: str = ""
@@ -22,6 +23,7 @@ class Settings(BaseSettings):
     sendgrid_api_key: str = ""
     sendgrid_from_email: str = "reports@yourdomain.com"
     staff_notification_email: str = "reservations@vivatel.com.my"  # Default for pilot
+    sendgrid_webhook_public_key: str = "" # Ed25519 public key for signature verification
 
     # WhatsApp
     whatsapp_verify_token: str = "sheerssoft_verify_token"
@@ -33,6 +35,10 @@ class Settings(BaseSettings):
     jwt_secret: str = "dev_jwt_secret_change_in_production"
     jwt_algorithm: str = "HS256"
     jwt_expiry_hours: int = 24
+    
+    # Admin Credentials
+    admin_user: str = "admin"
+    admin_password: str = "password123"
 
     # Environment
     environment: str = "development"
@@ -46,6 +52,10 @@ class Settings(BaseSettings):
     @property
     def is_production(self) -> bool:
         return self.environment == "production"
+
+    def model_post_init(self, __context):
+        if self.database_url.startswith("postgresql://"):
+            self.database_url = self.database_url.replace("postgresql://", "postgresql+asyncpg://")
 
     class Config:
         env_file = ".env"

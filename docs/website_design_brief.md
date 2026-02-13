@@ -62,10 +62,10 @@
 ## 2. Brand Identity & Design System
 
 ### Brand Name
-**Floyd AI** *(or your chosen product name — placeholder throughout)*
+**Nocturn AI** *(or your chosen product name — placeholder throughout)*
 
 ### Brand Positioning Statement
-> For hotel GMs and revenue managers who are losing bookings every night to unanswered inquiries, Floyd AI is the always-on AI concierge that captures every lead across WhatsApp, web, and email — and proves exactly how much revenue it recovered. Unlike generic chatbots, Floyd AI is purpose-built for hospitality, responds in under 30 seconds, and pays for itself in the first week.
+> For hotel GMs and revenue managers who are losing bookings every night to unanswered inquiries, Nocturn AI is the always-on AI concierge that captures every lead across WhatsApp, web, and email — and proves exactly how much revenue it recovered. Unlike generic chatbots, Nocturn AI is purpose-built for hospitality, responds in under 30 seconds, and pays for itself in the first week.
 
 ### Visual Identity
 
@@ -600,19 +600,19 @@ Those that wait become the leads someone else captures."
 
 ```html
 <!-- Homepage -->
-<title>Hotel AI Concierge — Capture Every Inquiry 24/7 | Floyd AI</title>
-<meta name="description" content="Stop losing bookings after 6pm! Floyd AI captures every WhatsApp, web & email inquiry 24/7 and proves revenue recovered. Free 30-day pilot for Malaysian hotels.">
+<title>Hotel AI Concierge — Capture Every Inquiry 24/7 | Nocturn AI</title>
+<meta name="description" content="Stop losing bookings after 6pm! Nocturn AI captures every WhatsApp, web & email inquiry 24/7 and proves revenue recovered. Free 30-day pilot for Malaysian hotels.">
 
 <!-- Features -->
-<title>Features — WhatsApp AI, Lead Capture & Revenue Recovery | Floyd AI</title>
+<title>Features — WhatsApp AI, Lead Capture & Revenue Recovery | Nocturn AI</title>
 <meta name="description" content="AI-powered WhatsApp responder, web chat widget, email handler & revenue recovery dashboard. Built for hotels. Live in 48 hours.">
 
 <!-- Pricing -->
-<title>Pricing — Start at RM 1,500/mo | Free 30-Day Pilot | Floyd AI</title>
+<title>Pricing — Start at RM 1,500/mo | Free 30-Day Pilot | Nocturn AI</title>
 <meta name="description" content="Plans for 3-star to 5-star hotels. Every plan starts with a free 30-day pilot. Recover RM 3,000-8,000/month in lost bookings.">
 
 <!-- How It Works -->
-<title>How It Works — Live in 48 Hours | Floyd AI Hotel AI Concierge</title>
+<title>How It Works — Live in 48 Hours | Nocturn AI Hotel AI Concierge</title>
 <meta name="description" content="3 simple steps: share your property info, connect your channels, watch revenue recover. Setup takes 48 hours. ROI visible in 7 days.">
 ```
 

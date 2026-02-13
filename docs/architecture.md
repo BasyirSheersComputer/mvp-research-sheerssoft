@@ -1,16 +1,18 @@
 # System Architecture
-## Floyd — AI Inquiry Capture & Conversion Engine
-### Version 1.0 · 11 Feb 2026
+## Nocturn AI — AI Inquiry Capture & Conversion Engine
+### Version 1.2 · 13 Feb 2026
+### Aligned with [product_context.md](./product_context.md) · Steered by [building-successful-saas-guide.md](./building-successful-saas-guide.md)
 
 ---
 
 ## 1. Architecture Philosophy
 
-This system is designed around **three non-negotiable constraints** derived from 20 years of building production systems at scale:
+This system is designed around **four non-negotiable constraints** derived from 20 years of building production systems at scale:
 
 1. **Guest latency < 30 seconds end-to-end.** Every architectural decision optimizes for this. A guest sends a WhatsApp message at 11pm and gets a useful answer before they switch to Booking.com.
 2. **Multi-tenant isolation from Day 1.** Property A's data never leaks to Property B. This is a trust product — one leak and every hotel cancels.
 3. **Operational simplicity over architectural elegance.** This is a 2-person engineering team shipping in 28 days. No microservices. No Kubernetes. One backend, one database, auto-scaling containers.
+4. **Observability from the start.** You cannot fix what you cannot measure. OpenTelemetry + metrics + alerting from day one. Set up alerts at 70% capacity thresholds.
 
 ---
 
@@ -128,6 +130,27 @@ All three channels (WhatsApp, Web, Email) produce different message formats. The
 
 This is critical. The AI engine should never know or care what channel a message came from. Channel-specific behavior (e.g., WhatsApp message length limits, email threading) is handled at the edges.
 
+### 3.5 Technical Debt Strategy
+
+> *"Some debt is fine. But if every change risks breaking something, you've crossed the line. Plan for refactoring sprints."*
+
+| Practice | Commitment |
+|----------|------------|
+| **Document shortcuts** | TODO comments with business threshold: `# TODO: Move to config when >50 customers` |
+| **Refactoring cadence** | One refactoring sprint every 4–5 feature sprints |
+| **Hardcoding v1** | Acceptable if it validates the business model faster. Track and schedule cleanup. |
+| **Critical path testing** | Signup-to-payment flow: comprehensive automated tests. Everything involving money. |
+
+**Rule:** Technical perfectionism kills. Ship in 28 days. Iterate based on customer feedback.
+
+### 3.6 API Design — External-First
+
+Design the API as if external customers will use it from day one. This forces good architectural decisions.
+
+- **Versioning:** `/api/v1` from day one. Never break v1; introduce v2 when needed.
+- **Resource modeling:** RESTful with clear resource boundaries. Version in URL, not header.
+- **Documentation:** OpenAPI/Swagger auto-generated from code. B2B: poor docs = churn.
+
 ---
 
 ## 4. Technology Stack
@@ -141,8 +164,12 @@ This is critical. The AI engine should never know or care what channel a message
 | **LLM Fallback** | Anthropic Claude Haiku | If OpenAI is down or rate-limited. Same prompt templates, different provider. |
 | **Web Widget** | Vanilla JS + CSS (embeddable) | Zero dependencies for hotel. Single `<script>` tag. <50KB bundle. |
 | **Staff Dashboard** | Next.js 14 (React) | SSR for performance. App Router for clean routing. Team has experience. |
+| **Authentication** | JWT (v1) → Auth0/Clerk (production hardening) | *Don't build auth yourself.* Current JWT acceptable for MVP. Migrate to Auth0 or Clerk before SOC 2 or 50+ customers. Security breaches kill young SaaS. |
+| **Observability** | OpenTelemetry + DataDog/New Relic (or GCP Cloud Trace) | Structured metrics, latency percentiles, error tracking. Alerts at 70% DB/API capacity. Implement in Sprint 1–2. |
+| **Product Analytics** | Amplitude or Mixpanel | Every feature instrumented for usage. Implement in month one. A/B testing infrastructure before needed. |
 | **WhatsApp** | Meta WhatsApp Business Cloud API | Official API. No third-party dependency. Webhook-based. |
-| **Email** | SendGrid (Inbound Parse + Outbound) | Webhook for inbound. SMTP for outbound reports. Proven at scale. |
+| **Email** | SendGrid (Inbound Parse + Outbound) | Webhook for inbound. SMTP for outbound. **Requires:** SPF, DKIM, DMARC for deliverability. |
+| **Payments** | Stripe (when added) | Don't build payment processing. Implement dunning (failed payment retry) — recovers 20–30% of failed transactions. |
 | **Infrastructure** | Google Cloud Run | Auto-scaling containers. Pay-per-use. No cluster management. Already deployed. |
 | **CI/CD** | GitHub Actions | Standard. Fast. Integrated with Cloud Run deployment. |
 
@@ -381,6 +408,7 @@ When `is_after_hours == True`:
 ## 7. AI / RAG Architecture
 
 ### 7.1 Knowledge Base Ingestion Pipeline
+> **Note:** To support "Live in 48 Hours" (website promise), this pipeline must support rapid ingestion. SheersSoft team builds the KB from property info (rate card, FAQs) shared on Day 0. Supports bulk ingestion from raw formats (PDF, Docx, CSV) via admin CLI or scripts, converting to structured Markdown/JSON.
 
 ```
 Property KB Document (Markdown/JSON)
@@ -417,6 +445,7 @@ Property KB Document (Markdown/JSON)
 ┌─────────────────────────────────────────────────┐
 │ SYSTEM PROMPT                                    │
 │ "You are a concierge for {property_name}..."    │
+│ Bilingual: English + Bahasa Malaysia (auto-detect) │
 │ Behavioral rules, guardrails, response format    │
 ├─────────────────────────────────────────────────┤
 │ PROPERTY CONTEXT (from RAG)                      │
@@ -561,6 +590,23 @@ graph LR
 - **PII handling**: Guest phone/email encrypted at field level using Fernet symmetric encryption. Decrypted only at display time.
 - **API key rotation**: Property API keys can be rotated without downtime.
 
+### 10.3 Backup & Disaster Recovery
+
+| Requirement | Implementation |
+|-------------|----------------|
+| Automated backups | Cloud SQL: daily automated backups with point-in-time recovery |
+| Restore testing | Quarterly test restores. *Companies lose everything because they had backups but never tested them.* |
+| Runbooks | Document as encountered: provision new customer, handle payment failure, investigate production issue |
+
+### 10.4 Observability Implementation
+
+| Component | Implementation |
+|-----------|----------------|
+| **Structured logging** | Structlog with correlation IDs. Log level, tenant, latency per request. |
+| **Metrics** | Request latency (P50, P95, P99), error rate, conversation volume, LLM token usage. |
+| **Alerting** | 70% DB CPU, API error rate >1%, latency P95 >5s. Alert on-call, not just log. |
+| **Tracing** | OpenTelemetry for request flow: webhook → conversation engine → LLM → response. |
+
 ---
 
 ## 11. Scalability Considerations
@@ -585,4 +631,4 @@ graph LR
 
 ---
 
-*This architecture is intentionally simple. The hardest engineering challenge in this product is not scale — it's AI quality. Every hour spent on infrastructure complexity at this stage is an hour not spent on making the AI responses accurate, the handoff seamless, and the dashboard compelling. Ship the monolith, tune the AI, and earn the right to add complexity.*
+*This architecture is intentionally simple. The hardest engineering challenge in this product is not scale — it's AI quality. Every hour spent on infrastructure complexity at this stage is an hour not spent on making the AI responses accurate, the handoff seamless, and the dashboard compelling. Ship the monolith, tune the AI, and earn the right to add complexity. Context validated against [product_context.md](./product_context.md).*

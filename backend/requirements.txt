@@ -1,6 +1,7 @@
 # Web framework
 fastapi==0.115.6
 uvicorn[standard]==0.34.0
+gunicorn==21.2.0
 python-multipart==0.0.20
 
 # Database
@@ -21,6 +22,7 @@ pydantic-settings==2.7.1
 
 # HTTP & Webhooks
 httpx==0.28.1
+redis==5.0.1
 
 # Email
 sendgrid==6.11.0

@@ -1,6 +1,7 @@
 # Build Plan
-## Floyd — AI Inquiry Capture & Conversion Engine
-### Version 1.0 · 11 Feb 2026 · Ship Date: 11 Mar 2026
+## Nocturn AI — AI Inquiry Capture & Conversion Engine
+### Version 1.2 · 13 Feb 2026 · Ship Date: 11 Mar 2026
+### Aligned with [product_context.md](./product_context.md) · Steered by [building-successful-saas-guide.md](./building-successful-saas-guide.md)
 
 ---
 
@@ -13,6 +14,12 @@
 - Sprint 1 AI Core is already built and functional (current codebase)
 - First paying customer target: within 60 days of start
 - Budget: bootstrapped — optimize for cloud cost efficiency
+
+**Survival imperatives (from Principal Engineer playbook):**
+- **Ship fast, learn faster.** Weekly or bi-weekly deployments. Feature flags for safe production testing.
+- **Technical founder:** 3–5 customer calls/week. Non-negotiable. Cannot build great products from a conference room.
+- **Metrics from day one.** Activation rate, retention cohorts, North Star Metric. Track churn reasons for every lost customer.
+- **Refactoring cadence:** One refactoring sprint every 4–5 feature sprints. Document TODOs with business thresholds.
 
 **What's Already Done (Sprint 1 — Complete):**
 - [x] FastAPI backend with async SQLAlchemy
@@ -48,6 +55,7 @@
 
 **Quality Gates:**
 - [ ] WhatsApp round-trip conversation works (send message → receive AI response)
+- [ ] **Bahasa Malaysia Support**: System correctly identifies and responds in BM.
 - [ ] Web widget loads on a test page and handles a 5-message conversation
 - [ ] Email → AI response → reply email with thread preserved
 - [ ] Human handoff triggers and context is packaged correctly
@@ -62,11 +70,13 @@
 
 | Day | Task | Owner | Deliverable | Dependencies |
 |-----|------|-------|-------------|--------------|
+| **15** | Observability: OpenTelemetry + metrics + alerts | Dev | Request latency (P50/P95/P99), error rate, 70% capacity alerts | — |
 | **15** | Staff Dashboard: project scaffold + auth | Dev | Next.js app with JWT login. Property-scoped access. | Backend auth endpoints (exist) |
 | **15–16** | Live Conversations view | Dev | Real-time list of active conversations. Click to view messages. Status indicators (active/handed_off/resolved). | WebSocket from backend |
 | **16–17** | Handoff Queue UI | Dev | Staff sees pending handoffs with context summary. "Take Over" button. Reply interface within dashboard. | Handoff flow (Sprint 2) |
 | **17–18** | GM Analytics Dashboard | Dev | Key metrics: total inquiries, after-hours %, response time, leads captured, estimated revenue recovered. Time-series charts. Channel breakdown. | Analytics aggregation service |
 | **18** | Analytics aggregation CRON job | Dev | Daily job: aggregate conversations → `analytics_daily` table. Compute estimated revenue. | Data models (exist) |
+| **18** | Product analytics instrumentation | Dev | Amplitude/Mixpanel: activation events, feature usage. North Star Metric: inquiries → leads → revenue. | — |
 | **18–19** | Lead Management view | Dev | Sortable/filterable table: leads with name, phone, email, intent, status, value, channel, timestamp. Click-to-view conversation. Status update (new→contacted→converted→lost). CSV export. | Lead data (exists) |
 | **19–20** | Automated daily email report | Dev | Scheduled job (8:00am property-local-time). Email to GM: yesterday's metrics, week-over-week comparison. HTML template. | SendGrid outbound + analytics data |
 | **20** | Dashboard UI polish | Product | Color palette, typography, responsive design. The GM should WANT to open this every morning. Big numbers. Clean layout. | All views built |
@@ -109,9 +119,10 @@ This is not optional. This screen sells the product.
 | Day | Task | Owner | Deliverable | Dependencies |
 |-----|------|-------|-------------|--------------|
 | **22** | Error handling & retry logic | Dev | Graceful LLM failures (fallback to template responses). Webhook retry handling. Circuit breaker for external APIs. | All services |
-| **22–23** | Property onboarding flow | Dev | Self-serve: create property → upload KB (markdown/JSON) → link WhatsApp → get widget snippet → go live. Target: < 2 hours per property. | Backend onboard endpoint |
+| **22–23** | Property onboarding flow | Dev | Create property → ingest KB (markdown/JSON) → link WhatsApp → get widget snippet → go live. **Target: supports "Live in 48 hours"** (Day 1: KB build + channel connect; Day 2: live). SheersSoft team handles KB build; hotel spends ~30 min on channel setup. | Backend onboard endpoint |
 | **23** | Multi-tenant security audit | Dev | Verify: Property A cannot see Property B's data. RLS enforced. Vector search scoped. Test with 2+ properties. | Data isolation code |
 | **24** | PDPA compliance implementation | Dev | PII encryption at field level. Data retention auto-purge. Privacy policy page. Consent flow on widget. Right-to-delete endpoint. | Security requirements |
+| **24** | Churn tracking: exit reason capture | Dev | When customer churns: capture reason (product, price, budget, competitor). >5% monthly = product problem. | — |
 | **24–25** | Load testing | Dev | Simulate 500 concurrent conversations. Verify Cloud Run auto-scales. Identify and fix bottlenecks. Measure P50/P95/P99 latency. | Production-like environment |
 | **25–26** | Vivatel UAT (User Acceptance Testing) | Product | Deploy to production. Zul and team test for 2 days with real scenarios. Collect feedback. | All features complete |
 | **26–27** | Bug fixes from UAT | Dev | Address blockers found during Vivatel testing. | UAT feedback |
@@ -138,17 +149,30 @@ This is not optional. This screen sells the product.
 | 6 | GM notification email set (daily reports) | ○ |
 | 7 | Monitoring + alerting configured (errors, latency spikes) | ○ |
 | 8 | Rollback plan documented (disable AI, revert to manual) | ○ |
+| 9 | Runbooks: provision new customer, payment failure, production incident | ○ |
 
 ---
 
-## 3. Post-Launch: 10-Customer Expansion (Days 29–60)
+## 3. Ongoing Rituals (Non-Negotiable)
+
+| Ritual | Cadence | Owner | Notes |
+|--------|---------|-------|-------|
+| **Customer calls** | 3–5 per week | Technical founder | You cannot build great products from a conference room. |
+| **Refactoring sprint** | Every 4–5 feature sprints | Dev | Address technical debt. Document TODOs with business thresholds. |
+| **Deployments** | Weekly or bi-weekly | Dev | Feature flags: deploy code without releasing features. Test in production safely. |
+| **Churn review** | Every lost customer | Product | Capture exit reason. >5% monthly churn = product problem. |
+| **Unit economics review** | Monthly | Product | LTV:CAC, payback period. Stop scaling if CAC > LTV/3. |
+
+---
+
+## 4. Post-Launch: 10-Customer Expansion (Days 29–60)
 
 ### Week 5–6: Prove It
 
 | Action | Goal |
 |---|---|
 | Capture Vivatel's first 7 days of data | Real numbers: inquiries, after-hours recovery, leads |
-| Build the "Vivatel Case Study" one-pager | *"47 inquiries/day. 21 recovered after-hours. RM 3,220 estimated monthly recovery."* |
+| Build the "Vivatel Case Study" one-pager | Target benchmarks from website: *"463 inquiries/30 days. 92% captured. RM 12,400 est. revenue recovered."* (Bukit Bintang pilot). Vivatel-specific numbers to be measured. |
 | Share results with Novotel (Shamsuridah), Ibis Styles (Simon), Melia (April) | Book 3 demo calls using real data |
 | Deploy pilots at 3 more properties | Onboarding flow must work in < 2 hours |
 
@@ -171,7 +195,7 @@ This is not optional. This screen sells the product.
 
 ---
 
-## 4. Cost Budget (Monthly at 10 Properties)
+## 5. Cost Budget (Monthly at 10 Properties)
 
 | Item | Cost / Month | Notes |
 |------|-------------|-------|
@@ -186,7 +210,7 @@ This is not optional. This screen sells the product.
 
 ---
 
-## 5. Risk Register & Mitigations
+## 6. Risk Register & Mitigations
 
 | # | Risk | Probability | Impact | Mitigation | Owner |
 |---|------|-------------|--------|------------|-------|
@@ -196,10 +220,12 @@ This is not optional. This screen sells the product.
 | 4 | LLM rate limiting during peak hours | Low | Medium | Implement queue with retry. Consider Claude Haiku as overflow provider. | Dev |
 | 5 | Hotel website blocks widget script (CSP) | Low | Medium | Provide iframe fallback. Offer to modify their CSP headers. | Dev |
 | 6 | Guest data breach / PDPA violation | Low | Critical | Field-level encryption. RLS. Penetration test before go-live. | Dev |
+| 7 | CAC > LTV (unit economics) | Medium | Critical | Track from first customer. Stop scaling acquisition if LTV:CAC < 3. | Product |
+| 8 | "Build it and they will come" (no distribution) | High | Critical | 3–5 customer calls/week. Case study → demos. Distribution strategy from day one. | Product |
 
 ---
 
-## 6. Definition of Done
+## 7. Definition of Done
 
 The product is **shipped** when ALL of these are true:
 
@@ -216,4 +242,4 @@ The product is **shipped** when ALL of these are true:
 
 ---
 
-*Ship in 28 days. Prove ROI in 7. Close 10 customers in 60. The plan is tight, the scope is intentionally small, and every feature earns its place by answering one question: "Does this make the GM open the dashboard tomorrow morning?"*
+*Ship in 28 days. Prove ROI in 7. Close 10 customers in 60. The plan is tight, the scope is intentionally small, and every feature earns its place by answering one question: "Does this make the GM open the dashboard tomorrow morning?" Aligned with [product_context.md](./product_context.md).*

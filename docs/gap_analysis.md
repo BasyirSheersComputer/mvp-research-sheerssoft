@@ -17,11 +17,11 @@ Before the opportunities, understand the **ground truth** that emerged consisten
 
 | # | Structural Truth | Who Said It | Implication |
 |---|---|---|---|
-| 1 | **"F&B has zero data infrastructure"** — rooms have Opera, IDS, TravelClick. F&B has nothing. | Amsyar (IHG Doha), Floyd, Bob | Massive unserved whitespace |
+| 1 | **"F&B has zero data infrastructure"** — rooms have Opera, IDS, TravelClick. F&B has nothing. | Amsyar (IHG Doha), Consultant, Bob | Massive unserved whitespace |
 | 2 | **"90% of bookings come through manual channels"** — walk-ins, WhatsApp, phone, email. | Zul (Vivatel), Shamsuridah (Novotel KLCC) | Inquiry leakage is structural, not accidental |
 | 3 | **"IT is the silent killer, not finance"** — finance wants efficiency; IT fears change cycles. | Bob (GM), Shafar (ANA Crowne Plaza) | Sell to GM/Revenue, not IT |
-| 4 | **"Hotels buy on ROI speed, not ROI size"** — owners want fast payback, not big promises. | Shafar, Bob, Floyd | Pilot must show value in <30 days |
-| 5 | **"Guests don't complain. They just don't come back."** — silent churn is the #1 revenue killer. | Floyd, Floyd Blueprint, Shafar | Retention tools > acquisition tools |
+| 4 | **"Hotels buy on ROI speed, not ROI size"** — owners want fast payback, not big promises. | Shafar, Bob, Consultant | Pilot must show value in <30 days |
+| 5 | **"Guests don't complain. They just don't come back."** — silent churn is the #1 revenue killer. | Consultant, Consultant Blueprint, Shafar | Retention tools > acquisition tools |
 
 ---
 
@@ -47,7 +47,7 @@ Each opportunity is scored on 4 axes (1-10 scale):
 
 | Axis | Score | Rationale |
 |---|---|---|
-| 🔥 Pain | **9** | Amsyar: *"No KYC for F&B, no demand forecasting, Avero is terrible."* Floyd: *"Opera already cover front office, zero for F&B."* Bob: *"F&B change menu every 3 months. Data is gone. Cannot compare."* |
+| 🔥 Pain | **9** | Amsyar: *"No KYC for F&B, no demand forecasting, Avero is terrible."* Consultant: *"Opera already cover front office, zero for F&B."* Bob: *"F&B change menu every 3 months. Data is gone. Cannot compare."* |
 | 💰 WTP | **8** | Amsyar: *"Hotels will buy you"* if you can optimize RevPASH. Hilton KL already has a dedicated F&B Revenue Manager. Big chains are actively looking. |
 | ⚡ TTV | **8** | Can demonstrate menu engineering insights and RevPASH/RevPSM dashboards within 2-3 weeks by connecting to Micros POS export data. |
 | 🌍 Size | **9** | Every hotel with 2+ outlets globally. City hotels with ballrooms (Hilton KL: 10 outlets) are the ideal ICP. |
@@ -117,7 +117,7 @@ Each opportunity is scored on 4 axes (1-10 scale):
 
 | Axis | Score | Rationale |
 |---|---|---|
-| 🔥 Pain | **8** | Floyd: *"None of them send me Happy Birthday. LHDN is more effective."* Shafar: *"$8-10k/month lost from one guest who wasn't recognized."* Blueprint: *"15% business lost to brand damage."* |
+| 🔥 Pain | **8** | Consultant: *"None of them send me Happy Birthday. LHDN is more effective."* Shafar: *"$8-10k/month lost from one guest who wasn't recognized."* Blueprint: *"15% business lost to brand damage."* |
 | 💰 WTP | **7** | Bernard: *"60% of hoteliers don't mind being bombarded with related promos."* Personalization sells. But budget allocation is unclear. |
 | ⚡ TTV | **6** | Requires historical guest data integration with PMS. Not a 1-week pilot. |
 | 🌍 Size | **8** | Universal problem. Every hotel worldwide loses repeat guests to silence. |
@@ -129,7 +129,7 @@ Each opportunity is scored on 4 axes (1-10 scale):
 - Retention scoring: predict which guests are at risk of churning
 
 **Why YES:**
-- Floyd's birthday story is devastating. He's a connected industry insider and not ONE hotel has wished him happy birthday. **LHDN (the tax office) does it better.** This is embarrassing for the industry.
+- Consultant's birthday story is devastating. He's a connected industry insider and not ONE hotel has wished him happy birthday. **LHDN (the tax office) does it better.** This is embarrassing for the industry.
 - Shafar's Sydney→Kobe story: one guest's bad experience at another property carried over, nobody flagged it, and they lost $8-10k/month. Cross-property intelligence is worth its weight in gold.
 - Blueprint response: *"Hospitality repeated business constitutes to almost 40% of total revenues."* Protecting 40% of revenue with a retention tool is easy math.
 - Bernard's survey: 60% of guests are okay with personalized outreach. The demand side wants this.
@@ -137,7 +137,7 @@ Each opportunity is scored on 4 axes (1-10 scale):
 **Why NOT / Caveats:**
 - PMS integration is the gatekeeper. Opera's walled garden means $25k+ just for API access (Shafar's warning).
 - PDPA/data privacy is a real blocker. Shafar: *"One name leaked = $1M penalty for US-registered companies."* Malaysia's PDPA is getting stricter.
-- Floyd's blueprint response was skeptical: *"Unless you know the person personally, nobody cares these days."* Some industry veterans are jaded about CRM.
+- Consultant's blueprint response was skeptical: *"Unless you know the person personally, nobody cares these days."* Some industry veterans are jaded about CRM.
 - Long time-to-value. You can't prove retention ROI in a 2-week pilot — it takes months to measure repeat bookings.
 
 > [!WARNING]
@@ -152,21 +152,21 @@ Each opportunity is scored on 4 axes (1-10 scale):
 
 | Axis | Score | Rationale |
 |---|---|---|
-| 🔥 Pain | **8** | Floyd: *"Who monitors staff? Manager too busy."* Blueprint: audit scored 38% against 75% passing. Retraining cost up 27% of monthly revenue. |
+| 🔥 Pain | **8** | Consultant: *"Who monitors staff? Manager too busy."* Blueprint: audit scored 38% against 75% passing. Retraining cost up 27% of monthly revenue. |
 | 💰 WTP | **6** | Training budgets exist but are often the first to be cut. Owners think *"anyone can be hired from the streets."* |
 | ⚡ TTV | **6** | Requires SOP digitization and workflow setup per property. Not plug-and-play. |
 | 🌍 Size | **7** | Manpower shortage is global (Malaysia, Indonesia, Japan all cited). |
 
 **What to build:**
 - Digital SOP checklists with AI-powered task verification
-- Staff training chatbot (Floyd's vision: *"Ask question to AI, AI addresses the problem"*)
+- Staff training chatbot (Consultant's vision: *"Ask question to AI, AI addresses the problem"*)
 - Shift monitoring and task completion dashboards
 - Escalation routing: housekeeping complaint → FO → compensation workflow
 
 **Why YES:**
 - The audit story from the blueprint is devastating: a property scored **38% on brand audit** because the trained managers left and SOPs weren't retrained. Re-hiring + retraining cost 27% of monthly revenue for 3-6 months.
 - Shafar: manpower shortage is structural across MY, ID, JP. Hotels are forced to hire unskilled foreign labor and train on the job. AI-assisted training reduces the ramp-up time.
-- Floyd's vision aligns perfectly: *"Nobody wants to sit in classroom 4 hours. Want everything at a click of a button."*
+- Consultant's vision aligns perfectly: *"Nobody wants to sit in classroom 4 hours. Want everything at a click of a button."*
 
 **Why NOT / Caveats:**
 - Hard to monetize directly. GMs see this as "nice to have," not "must have." The ROI argument is indirect (fewer audit failures, less retraining cost).
@@ -216,7 +216,7 @@ Each opportunity is scored on 4 axes (1-10 scale):
 
 | Axis | Score | Rationale |
 |---|---|---|
-| 🔥 Pain | **9** | Floyd: *"Employee QR instead of company QR. Money enters personal account."* Zouk example: RM350k/night, 2% to staff pockets = untrackable. |
+| 🔥 Pain | **9** | Consultant: *"Employee QR instead of company QR. Money enters personal account."* Zouk example: RM350k/night, 2% to staff pockets = untrackable. |
 | 💰 WTP | **6** | Owners absolutely want this, but they're also the hardest to sell to (trust barrier). |
 | ⚡ TTV | **4** | Requires POS integration, payment reconciliation, real-time audit trails. Complex build. |
 | 🌍 Size | **5** | Strongest for owner-operators and independent chains. Big brands have internal controls. |
@@ -228,12 +228,12 @@ Each opportunity is scored on 4 axes (1-10 scale):
 - Anomaly detection for cash handling and stock discrepancies
 
 **Why YES:**
-- Floyd's stories are jaw-dropping. Staff using personal QR codes instead of company ones to intercept payments. Unaudited stock at Zouk. This is **real theft** happening at scale.
-- Owners are paranoid about this (Floyd: *"Customer check-in room, money not entering bank."*). If you can prove you catch leakage, the ROI is instant and emotional.
+- Consultant's stories are jaw-dropping. Staff using personal QR codes instead of company ones to intercept payments. Unaudited stock at Zouk. This is **real theft** happening at scale.
+- Owners are paranoid about this (Consultant: *"Customer check-in room, money not entering bank."*). If you can prove you catch leakage, the ROI is instant and emotional.
 
 **Why NOT / Caveats:**
 - Politically dangerous. You're essentially building a surveillance tool. Staff and managers will resist adoption.
-- Floyd himself warned: *"Hentam staff, semua orang tak datang kerja sudah."* Cracking down too hard causes mass walkouts.
+- Consultant himself warned: *"Hentam staff, semua orang tak datang kerja sudah."* Cracking down too hard causes mass walkouts.
 - Complex integrations across POS, PMS, and payment gateways. Long build time.
 - Trust barrier: owners need to trust YOUR system before giving you access to their financial data.
 
@@ -331,4 +331,4 @@ Bob was blunt: *"They won't pay you too much at one time. They don't understand 
 
 ---
 
-*Analysis based on interviews with: Bob (GM, multiple turnarounds), Zul (Vivatel KL Reservation Mgr), Floyd (Hospitality Consultant, ex-Hyatt 18yrs), Amsyar (Revenue Mgr, IHG Doha), Shafar (GM, ANA Crowne Plaza Kobe), Bernard (TravelClick/Amadeus Implementation Consultant), Shamsuridah (Novotel KLCC Reservations), and CRM outreach across 30+ KL properties.*
+*Analysis based on interviews with: Bob (GM, multiple turnarounds), Zul (Vivatel KL Reservation Mgr), Consultant (Hospitality Consultant, ex-Hyatt 18yrs), Amsyar (Revenue Mgr, IHG Doha), Shafar (GM, ANA Crowne Plaza Kobe), Bernard (TravelClick/Amadeus Implementation Consultant), Shamsuridah (Novotel KLCC Reservations), and CRM outreach across 30+ KL properties.*

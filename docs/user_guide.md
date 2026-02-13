@@ -1,4 +1,4 @@
-# 📋 Floyd AI User Guide for Hotel Managers
+# 📋 Nocturn AI User Guide for Hotel Managers
 
 ## 1. Daily Workflow
 
@@ -9,7 +9,7 @@ You will receive an email summarizing yesterday's performance:
 - **Handoffs**: Conversations requiring staff follow-up.
 
 ### 💬 Dashboard Overview
-Visit `<your-dashboard-url>` (e.g., `https://floyd-dashboard.railway.app`) to see real-time stats.
+Visit `<your-dashboard-url>` (e.g., `https://nocturn-dashboard.railway.app`) to see real-time stats.
 - **Conversations**: View live chats from WhatsApp and Web.
 - **Leads**: See captured guest details (Name, Phone, Intent).
 - **Analytics**: Money view and Operations view.

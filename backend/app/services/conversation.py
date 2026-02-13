@@ -30,37 +30,38 @@ openai_client = AsyncOpenAI(api_key=settings.openai_api_key)
 # System Prompts — The personality and rules of the AI
 # ─────────────────────────────────────────────────────────────
 
-SYSTEM_PROMPT_BASE = """You are a friendly, professional AI concierge for {property_name}.
-You help guests with inquiries about the hotel — rooms, rates, facilities, directions, check-in/out times, and more.
+SYSTEM_PROMPT_BASE = """You are the AI Concierge for {property_name}, designed to help guests book their stay.
+Your goal is to be helpful, warm, and *efficient*. You want to get the guest key information quickly so they can book.
 
-CRITICAL RULES:
-1. ONLY quote rates, room types, and factual information that appears in the PROPERTY KNOWLEDGE BASE below. NEVER fabricate or guess.
-2. If you don't know something or it's not in the knowledge base, say: "Let me connect you with our reservations team who can help with that."
-3. Keep responses to 1-3 sentences. You're on WhatsApp/chat — be concise.
-4. Respond in the same language the guest uses (English or Bahasa Malaysia).
-5. Be warm and helpful, use appropriate emoji sparingly (1-2 max per message).
-6. After hours (outside {operating_hours}), mention: "Our reservations team will follow up first thing tomorrow morning."
-7. Capture the guest's name and contact naturally within conversation — don't demand it upfront.
+### KEY BEHAVIORS:
+1.  **Be Concise**: Use short sentences. limit responses to 1-3 sentences max.
+2.  **Be Revenue-Focused**: If a guest asks about rooms, *always* ask for their dates to give an accurate quote.
+3.  **Stick to Facts**: ONLY use the PROPERTY KNOWLEDGE BASE below. If unsure, say: "Let me have our reservations team check that for you."
+4.  **After Hours**: It is currently {after_hours_state}. If it is after hours (late night), be extra reassuring: "Our team is away, but I'm here to take down your details so they can contact you first thing in the morning."
+5.  **Language**: Match the guest's language (English or Bahasa Malaysia).
 
-PROPERTY KNOWLEDGE BASE:
+### PROPERTY KNOWLEDGE BASE:
 {knowledge_base_context}
 """
 
 LEAD_CAPTURE_ADDENDUM = """
-The guest has expressed booking intent. Shift to collecting their details naturally:
-- Name (if not already known)
-- Preferred dates
-- Room preference
-- Contact email or phone (if not already captured from the channel)
-Be warm, not pushy. Example: "I'd love to help you with that! Could I get your name and preferred dates?"
+### ACTIVE LEAD CAPTURE MODE
+The guest is interested. Your ONE Goal is to secure their details for the team.
+Don't be passive. politely *guide* them to give you this info:
+1.  **Name**
+2.  **Dates of Stay**
+3.  **Phone/Email** (if not already visible)
+
+Example: "I can definitely check rates for you! What dates are you looking to stay?"
+Example 2: "Perfect. Could I get your name to start a tentative booking?"
 """
 
 HANDOFF_ADDENDUM = """
-The guest needs human assistance (complex request, complaint, or explicitly asked for a person).
-Acknowledge their need, assure them, and prepare to transfer:
-- Summarize what you've discussed so far
-- Say: "I understand this needs a personal touch. Let me connect you with our reservations team right away. They'll have the full context of our conversation."
-- Do NOT try to solve the problem yourself at this point
+### HANDOFF MODE
+The guest needs a human.
+1.  **De-escalate**: "I understand."
+2.  **Assure**: "I'm passing this full conversation to our Property Manager right now."
+3.  **Close**: "They will contact you as soon as they are back online."
 """
 
 
@@ -125,7 +126,10 @@ async def get_or_create_conversation(
             Conversation.guest_identifier == guest_identifier,
             Conversation.status == "active",
         )
-        .options(selectinload(Conversation.messages))
+        .options(
+            selectinload(Conversation.messages),
+            selectinload(Conversation.lead)
+        )
         .order_by(Conversation.started_at.desc())
         .limit(1)
     )
@@ -148,6 +152,8 @@ async def get_or_create_conversation(
     )
     db.add(conversation)
     await db.flush()
+    # Refresh to ensure relationships (like lead) are loaded/mocked to avoid Greenlet error
+    await db.refresh(conversation, ["lead"])
     return conversation
 
 
@@ -211,10 +217,19 @@ async def process_guest_message(
     ) if kb_docs else "No property information available yet."
 
     # 6. Build conversation history for LLM context
-    await db.refresh(conversation, ["messages"])
+    # Use explicit select to avoid MissingGreenlet / lazy load issues
+    msgs_result = await db.execute(
+        select(Message)
+        .where(Message.conversation_id == conversation.id)
+        .order_by(Message.sent_at.desc())  # Newest first
+        .limit(10)
+    )
+    # Reverse to get chronological order
+    recent_messages = list(msgs_result.scalars().all())[::-1]
+
     history = []
     # Wrap guest message in XML tags for robustness (Audit R4)
-    for m in conversation.messages[-10:]:  # Last 10 messages for context window
+    for m in recent_messages:
         content = m.content
         role = "user"
         if m.role == "guest":
@@ -230,10 +245,14 @@ async def process_guest_message(
             f"{prop.operating_hours.get('start', '09:00')} - "
             f"{prop.operating_hours.get('end', '18:00')}"
         )
-
+    
+    after_hours_state = "during operating hours"
+    if conversation.is_after_hours:
+        after_hours_state = f"AFTER HOURS (Operating hours are {operating_hours_str})"
+        
     system_prompt = SYSTEM_PROMPT_BASE.format(
         property_name=prop.name,
-        operating_hours=operating_hours_str,
+        after_hours_state=after_hours_state,
         knowledge_base_context=kb_context,
     )
 
@@ -311,9 +330,16 @@ async def _try_extract_lead(
     Uses a lightweight LLM call to extract structured info.
     """
     # Build the full conversation text
-    await db.refresh(conversation, ["messages"])
+    # Explicitly fetch all messages
+    msgs_result = await db.execute(
+        select(Message)
+        .where(Message.conversation_id == conversation.id)
+        .order_by(Message.sent_at)
+    )
+    messages = msgs_result.scalars().all()
+    
     full_conversation = "\n".join(
-        f"{msg.role}: {msg.content}" for msg in conversation.messages
+        f"{msg.role}: {msg.content}" for msg in messages
     )
 
     extraction_response = await openai_client.chat.completions.create(

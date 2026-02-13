@@ -1,6 +1,6 @@
 # 🚀 Deployment Guide (Railway/Fly.io)
 
-This guide covers deploying the Floyd AI Engine to a production environment. We recommend **Railway** for simplicity and built-in Postgres + Redis support.
+This guide covers deploying the Nocturn AI Engine to a production environment. We recommend **Railway** for simplicity and built-in Postgres + Redis support.
 
 ## Prerequisites
 - [Railway CLI](https://docs.railway.app/guides/cli) installed (`npm i -g @railway/cli`)
@@ -54,10 +54,10 @@ To test production builds locally:
 
 ```bash
 # Backend
-docker build -t floyd-backend:prod ./backend
-docker run --env-file .env -p 8000:8000 floyd-backend:prod
+docker build -t nocturn-backend:prod ./backend
+docker run --env-file .env -p 8000:8000 nocturn-backend:prod
 
 # Frontend
-docker build -t floyd-frontend:prod ./frontend
-docker run -p 3000:3000 -e NEXT_PUBLIC_API_URL=http://localhost:8000 floyd-frontend:prod
+docker build -t nocturn-frontend:prod ./frontend
+docker run -p 3000:3000 -e NEXT_PUBLIC_API_URL=http://localhost:8000 nocturn-frontend:prod
 ```

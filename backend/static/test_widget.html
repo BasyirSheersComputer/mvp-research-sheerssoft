@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,6 +18,7 @@
             align-items: center;
             justify-content: center;
         }
+
         .container {
             background: rgba(255, 255, 255, 0.9);
             padding: 40px;
@@ -26,8 +28,17 @@
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
             backdrop-filter: blur(5px);
         }
-        h1 { color: #1e293b; margin-bottom: 10px; }
-        p { color: #64748b; line-height: 1.6; }
+
+        h1 {
+            color: #1e293b;
+            margin-bottom: 10px;
+        }
+
+        p {
+            color: #64748b;
+            line-height: 1.6;
+        }
+
         .btn {
             display: inline-block;
             background: #0f172a;
@@ -40,6 +51,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h1>Welcome to Vivatel KL</h1>
@@ -48,15 +60,11 @@
         <a href="#" class="btn">Book Now</a>
     </div>
 
-    <!-- Floyd AI Widget -->
+    <!-- Nocturn AI Widget -->
     <!-- Ideally we fetch the property ID dynamically or prompt the user. 
          For now, we'll use a placeholder and instruct to replace or use the one from seed data. -->
-    <script 
-        src="http://localhost:8000/static/widget.js"
-        data-property-id="REPLACE_WITH_ACTUAL_PROPERTY_ID"
-        data-api-url="http://localhost:8000"
-        data-color="#0F172A"
-    ></script>
+    <script src="http://localhost:8000/static/widget.js" data-property-id="REPLACE_WITH_ACTUAL_PROPERTY_ID"
+        data-api-url="http://localhost:8000" data-color="#0F172A"></script>
 
     <script>
         // Helper to grab property ID if testing locally with seed script
@@ -66,4 +74,5 @@
         console.log("Don't forget to replace data-property-id with the UUID from the seed script output!");
     </script>
 </body>
+
 </html>

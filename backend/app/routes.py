@@ -1,5 +1,5 @@
 """
-API routes for the Floyd AI Inquiry Capture Engine.
+API routes for the Nocturn AI Inquiry Capture Engine.
 
 Organized by the three user experiences:
 - Guest channels: WhatsApp webhook, Web chat, Email webhook
@@ -36,9 +36,12 @@ from app.services.conversation import process_guest_message
 from app.services import ingest_knowledge_base
 from app.services.whatsapp import send_whatsapp_message
 from app.services.email import send_email, notify_staff_handoff
-from app.services.email import send_email, notify_staff_handoff
+from app.services.email import send_email, notify_staff_handoff, notify_staff_handoff_enhanced, normalize_email_message
 from app.limiter import limiter
-from app.auth import verify_jwt, verify_whatsapp_signature
+from app.auth import verify_jwt, verify_whatsapp_signature, verify_sendgrid_signature, check_property_access
+from app.core.normalization import NormalizedMessage
+from app.services.whatsapp import send_whatsapp_message, normalize_whatsapp_message
+from app.services.analytics import get_realtime_stats
 
 logger = structlog.get_logger()
 router = APIRouter(prefix="/api/v1")
@@ -54,6 +57,14 @@ async def list_properties(
     token: dict = Depends(verify_jwt),
 ):
     """List all properties (for dashboard selection)."""
+    # result = await db.execute(select(Property))
+    # return result.scalars().all()
+    # Pydantic validation error fix: return list of properties
+    
+    # We still need to set context or bypass if RLS blocks listing all properties?
+    # But previous endpoint implementation didn't have special context logic.
+    # Assuming RLS allows SELECT for property table or relying on admin privilege in DB.
+    
     result = await db.execute(select(Property))
     return result.scalars().all()
 
@@ -70,54 +81,38 @@ async def whatsapp_webhook(
     """
     WhatsApp Cloud API webhook receiver.
     Handles verification (GET) and incoming messages (POST).
-    Returns 200 OK immediately and processes message in background.
     """
     body = await request.json()
 
-    # Extract message from WhatsApp webhook payload
-    try:
-        entry = body.get("entry", [{}])[0]
-        changes = entry.get("changes", [{}])[0]
-        value = changes.get("value", {})
-        messages = value.get("messages", [])
+    # 1. Normalize payload
+    normalized_data = normalize_whatsapp_message(body)
+    
+    if not normalized_data:
+        # Not a valid message (could be a status update or other event we don't handle yet)
+        return {"status": "ignored"}
 
-        if not messages:
-            return {"status": "no_messages"}
+    # 2. Find property by WhatsApp Phone Number ID
+    phone_number_id = normalized_data["metadata"].get("phone_number_id")
+    
+    prop_result = await db.execute(
+        select(Property).where(Property.whatsapp_number == phone_number_id)
+    )
+    prop = prop_result.scalar_one_or_none()
 
-        msg = messages[0]
-        from_number = msg.get("from", "")
-        text = msg.get("text", {}).get("body", "")
-        guest_name = value.get("contacts", [{}])[0].get("profile", {}).get("name")
+    if not prop:
+        logger.warning("WhatsApp webhook: Property not found", phone_id=phone_number_id)
+        return {"status": "property_not_found"}
 
-        if not text:
-            return {"status": "no_text"}
+    # 3. Process in background
+    background_tasks.add_task(
+        _handle_whatsapp_message_async,
+        property_id=prop.id,
+        from_number=normalized_data["guest_identifier"],
+        text=normalized_data["content"],
+        guest_name=normalized_data["guest_name"]
+    )
 
-        # Find property by WhatsApp number
-        phone_id = value.get("metadata", {}).get("phone_number_id", "")
-        prop_result = await db.execute(
-            select(Property).where(Property.whatsapp_number == phone_id)
-        )
-        prop = prop_result.scalar_one_or_none()
-
-        if not prop:
-            logger.warning("WhatsApp webhook: Property not found", phone_id=phone_id)
-            return {"status": "property_not_found"}
-
-        # Process in background to avoid styling timeout
-        background_tasks.add_task(
-            _handle_whatsapp_message_async,
-            property_id=prop.id,
-            from_number=from_number,
-            text=text,
-            guest_name=guest_name
-        )
-
-        return {"status": "processing"}
-
-    except Exception as e:
-        logger.error("WhatsApp webhook error", error=str(e))
-        # Return 200 to prevent WhatsApp from retrying endlessly on bad payloads
-        return {"status": "error"}
+    return {"status": "processing"}
 
 
 async def _handle_whatsapp_message_async(
@@ -130,10 +125,13 @@ async def _handle_whatsapp_message_async(
     Background task to process WhatsApp message and send reply.
     """
     # Create a new DB session for the background task
-    from app.database import async_session
+    from app.database import async_session, set_db_context
     
     async with async_session() as db:
         try:
+            # Set RLS context for this property
+            await set_db_context(db, str(property_id))
+
             result = await process_guest_message(
                 db=db,
                 property_id=property_id,
@@ -143,13 +141,17 @@ async def _handle_whatsapp_message_async(
                 guest_name=guest_name,
             )
             
+            await db.commit()
+            
             # Send response back via WhatsApp API
             response_text = result["response"]
             await send_whatsapp_message(to_number=from_number, message_text=response_text)
             
             # Notify staff if handoff triggered
             if result.get("mode") == "handoff":
-                await notify_staff_handoff(
+                await notify_staff_handoff_enhanced(
+                    property_id=str(property_id),
+                    conversation_id=result["conversation_id"],
                     guest_identifier=from_number,
                     channel="whatsapp",
                     guest_name=guest_name,
@@ -178,6 +180,8 @@ async def email_webhook(
     # FastAPI handles this via alias? No.
     # We need to access via request.form() because 'from' is a keyword.
     request: Request = None,
+    # Verification (Optional but recommended)
+    _ = Depends(verify_sendgrid_signature),
     db: AsyncSession = Depends(get_db)
 ):
     """
@@ -186,41 +190,33 @@ async def email_webhook(
     """
     form_data = await request.form()
     
-    # Extract fields manually to handle 'from' keyword collision
-    from_address = form_data.get("from")
-    to_address = form_data.get("to")
-    subject_text = form_data.get("subject", "No Subject")
-    body_text = form_data.get("text", "")
+    # 1. Normalize
+    normalized_data = normalize_email_message(dict(form_data))
     
-    # Simple parsing to check simple text
-    if not body_text:
-        return {"status": "empty_body"}
-
-    # Extract email address from "Name <email@domain.com>" format
-    import re
-    email_match = re.search(r'<([^>]+)>', from_address)
-    guest_email = email_match.group(1) if email_match else from_address
-    guest_name = from_address.split('<')[0].strip() if '<' in from_address else None
-
-    # Find property mechanism
-    # TODO: Match by to_address or dedicated inbound email field
-    # For now, secure default: do not fall back to random property
-    # prop_result = await db.execute(select(Property).limit(1))
-    # prop = prop_result.scalar_one_or_none()
-    prop = None
+    if not normalized_data:
+        return {"status": "ignored"}
+        
+    # 2. Find property by To address
+    # In normalized data, we put to_address in metadata
+    to_address = normalized_data["metadata"].get("to_address")
+    
+    prop_result = await db.execute(
+        select(Property).where(Property.notification_email == to_address)
+    )
+    prop = prop_result.scalar_one_or_none()
     
     if not prop:
         logger.warning("Email webhook: Property not found", to_address=to_address)
         return {"status": "no_property"}
 
-    # Process in background
+    # 3. Process
     background_tasks.add_task(
         _handle_email_message_async,
         property_id=prop.id,
-        guest_email=guest_email,
-        subject=subject_text,
-        text=body_text,
-        guest_name=guest_name
+        from_address=normalized_data["guest_identifier"],
+        subject=normalized_data["metadata"].get("subject"),
+        text=normalized_data["content"], # content includes subject preamble
+        guest_name=normalized_data["guest_name"]
     )
 
     return {"status": "processing"}
@@ -228,46 +224,50 @@ async def email_webhook(
 
 async def _handle_email_message_async(
     property_id: uuid.UUID,
-    guest_email: str,
+    from_address: str, # renamed from guest_email to match usage
     subject: str,
-    text: str,
+    text: str, # this is now the full content
     guest_name: str | None
 ):
     """
     Background task to process inbound email and send reply.
     """
-    from app.database import async_session
+    from app.database import async_session, set_db_context
     
     async with async_session() as db:
         try:
-            # Append subject to text for context
-            full_message = f"Subject: {subject}\n\n{text}"
+            # Set RLS context
+            await set_db_context(db, str(property_id))
             
             result = await process_guest_message(
                 db=db,
                 property_id=property_id,
-                guest_identifier=guest_email,
+                guest_identifier=from_address,
                 channel="email",
-                message_text=full_message,
+                message_text=text,
                 guest_name=guest_name,
             )
+            
+            await db.commit()
             
             response_text = result["response"]
             
             # Send reply
             await send_email(
-                to_email=guest_email,
+                to_email=from_address,
                 subject=f"Re: {subject}",
                 content=response_text
             )
 
             # Notify staff if handoff triggered
             if result.get("mode") == "handoff":
-                await notify_staff_handoff(
-                    guest_identifier=guest_email,
+                await notify_staff_handoff_enhanced(
+                    property_id=str(property_id),
+                    conversation_id=result["conversation_id"],
+                    guest_identifier=from_address,
                     channel="email",
                     guest_name=guest_name,
-                    conversation_summary=f"Subject: {subject}\n\nMessage: {text}\n\nAI Reply: {response_text}"
+                    conversation_summary=f"Message: {text}\n\nAI Reply: {response_text}"
                 )
             
         except Exception as e:
@@ -275,7 +275,7 @@ async def _handle_email_message_async(
                 "Error processing email message",
                 error=str(e),
                 property_id=str(property_id),
-                guest_email=guest_email
+                guest_email=from_address
             )
 
 
@@ -364,7 +364,7 @@ async def list_conversations(
     limit: int = Query(50, le=200),
     db: AsyncSession = Depends(get_db),
     # Auth
-    token: dict = Depends(verify_jwt),
+    token: dict = Depends(check_property_access),
 ):
     """List conversations for a property (staff dashboard)."""
     query = (
@@ -467,6 +467,28 @@ async def resolve_conversation(
     return {"status": "resolved", "conversation_id": conversation_id}
 
 
+@router.get("/analytics/dashboard")
+async def get_dashboard_stats(
+    user: dict = Depends(verify_jwt),
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    Get real-time dashboard statistics.
+    Includes:
+    - Money Slide (Recovered Revenue)
+    - Operations View (Active Inquiries, Response Time)
+    """
+    # Quick hack for MVP: Fetch the first property ID since we are single tenant per deployment usually
+    result = await db.execute(select(Property).limit(1))
+    prop = result.scalar_one_or_none()
+    
+    if not prop:
+         raise HTTPException(status_code=404, detail="No property found")
+         
+    stats = await get_realtime_stats(db, prop.id)
+    return stats
+
+
 # ─────────────────────────────────────────────────────────────
 # GM: Leads
 # ─────────────────────────────────────────────────────────────
@@ -480,7 +502,7 @@ async def list_leads(
     to_date: date = Query(None),
     limit: int = Query(50, le=500),
     db: AsyncSession = Depends(get_db),
-    token: dict = Depends(verify_jwt),
+    token: dict = Depends(check_property_access),
 ):
     """List leads for a property (GM dashboard leads view)."""
     query = (
@@ -561,7 +583,7 @@ async def get_analytics(
     from_date: date = Query(None),
     to_date: date = Query(None),
     db: AsyncSession = Depends(get_db),
-    token: dict = Depends(verify_jwt),
+    token: dict = Depends(check_property_access),
 ):
     """
     Get analytics for a property over a date range.
@@ -629,6 +651,75 @@ async def get_analytics(
     }
 
 
+@router.get("/properties/{property_id}/analytics/live")
+async def get_analytics_live(
+    property_id: str,
+    db: AsyncSession = Depends(get_db),
+    token: dict = Depends(verify_jwt),
+):
+    """
+    Get real-time analytics for the current day.
+    """
+    from app.services.analytics import get_realtime_stats
+    stats = await get_realtime_stats(db, uuid.UUID(property_id))
+    return stats
+
+
+# ─────────────────────────────────────────────────────────────
+# Auth Routes
+# ─────────────────────────────────────────────────────────────
+
+from fastapi.security import OAuth2PasswordRequestForm
+from app.config import get_settings
+from jose import jwt
+from datetime import datetime, timedelta
+from app.auth import check_property_access
+
+@router.post("/auth/token")
+async def login_for_access_token(
+    form_data: OAuth2PasswordRequestForm = Depends(),
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    Login endpoint for dashboard access.
+    MVP: Hardcoded admin check or check against properties.
+    """
+    settings = get_settings()
+    # Simple hardcoded check for MVP
+    user_ok = False
+    
+    # Check 1: Master Admin
+    if form_data.username == settings.admin_user and form_data.password == settings.admin_password:
+        user_ok = True
+        
+    # Check 2: Property Email (Optional, for later)
+    # result = await db.execute(select(Property).where(Property.notification_email == form_data.username))
+    # prop = result.scalar_one_or_none()
+    # if prop and form_data.password == "password123": # Insecure for prod, ok for MVP demo
+    #    user_ok = True
+
+    if not user_ok:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect username or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    # Create JWT
+    access_token_expires = timedelta(hours=settings.jwt_expiry_hours)
+    expire = datetime.utcnow() + access_token_expires
+    
+    to_encode = {
+        "sub": form_data.username, 
+        "exp": expire,
+        "is_admin": True, # For now, all logins are admin
+        "property_ids": ["*"] # Wildcard access for admin
+    }
+    encoded_jwt = jwt.encode(to_encode, settings.jwt_secret, algorithm=settings.jwt_algorithm)
+    
+    return {"access_token": encoded_jwt, "token_type": "bearer"}
+
+
 # ─────────────────────────────────────────────────────────────
 # Property Admin
 # ─────────────────────────────────────────────────────────────
@@ -693,7 +784,7 @@ async def upload_knowledge_base(
     property_id: str,
     body: KBIngestRequest,
     db: AsyncSession = Depends(get_db),
-    token: dict = Depends(verify_jwt),
+    token: dict = Depends(check_property_access),
 ):
     """Upload or replace a property's knowledge base."""
     pid = uuid.UUID(property_id)
@@ -803,7 +894,7 @@ async def get_lead(
 async def get_analytics_summary(
     property_id: str,
     db: AsyncSession = Depends(get_db),
-    token: dict = Depends(verify_jwt),
+    token: dict = Depends(check_property_access),
 ):
     """Get aggregated analytics summary (hero stats)."""
     pid = uuid.UUID(property_id)
@@ -840,7 +931,7 @@ async def get_analytics_summary(
 async def get_property_settings(
     property_id: str,
     db: AsyncSession = Depends(get_db),
-    token: dict = Depends(verify_jwt),
+    token: dict = Depends(check_property_access),
 ):
     """Get property configuration."""
     result = await db.execute(
@@ -864,7 +955,7 @@ async def get_property_settings(
 async def onboard_property(
     property_id: str,
     db: AsyncSession = Depends(get_db),
-    token: dict = Depends(verify_jwt),
+    token: dict = Depends(check_property_access),
 ):
     """Trigger onboarding."""
     return {"status": "onboarded", "property_id": property_id}

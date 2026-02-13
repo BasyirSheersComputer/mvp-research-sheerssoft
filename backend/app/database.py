@@ -21,6 +21,15 @@ async_session = async_sessionmaker(
     expire_on_commit=False,
 )
 
+from sqlalchemy import text
+
+
+async def set_db_context(session: AsyncSession, property_id: str):
+    """Sets the RLS context for the current session."""
+    await session.execute(
+        text(f"select set_config('app.current_property_id', '{property_id}', false)")
+    )
+
 
 async def get_db() -> AsyncSession:
     """FastAPI dependency that provides a database session."""

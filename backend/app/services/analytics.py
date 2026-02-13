@@ -138,15 +138,15 @@ async def compute_daily_analytics(
     channel_breakdown = {row[0]: row[1] for row in channel_result.fetchall()}
 
     # 8. Estimated revenue recovered
-    # Formula: after_hours_leads × property_ADR
+    # Logic: Sum of (Lead.estimated_value OR Property.ADR) for all after-hours leads
     prop_result = await db.execute(
         select(Property.adr).where(Property.id == property_id)
     )
     adr = prop_result.scalar() or Decimal("230")
 
-    # Count after-hours leads specifically
-    after_hours_leads_result = await db.execute(
-        select(func.count(Lead.id)).where(
+    # Fetch after-hours leads with their values
+    leads_revenue_result = await db.execute(
+        select(Lead.estimated_value).where(
             Lead.property_id == property_id,
             Lead.captured_at >= day_start,
             Lead.captured_at < day_end,
@@ -157,8 +157,16 @@ async def compute_daily_analytics(
             ),
         )
     )
-    after_hours_leads = after_hours_leads_result.scalar() or 0
-    estimated_revenue = Decimal(str(after_hours_leads)) * adr
+    
+    total_revenue = Decimal("0")
+    for row in leads_revenue_result.fetchall():
+        val = row[0]
+        if val is not None:
+            total_revenue += val
+        else:
+            total_revenue += adr
+
+    estimated_revenue = total_revenue
 
     # 9. Upsert analytics record
     existing = await db.execute(
@@ -217,3 +225,133 @@ async def compute_all_properties_daily(
         records.append(record)
 
     return records
+
+async def get_realtime_stats(
+    db: AsyncSession,
+    property_id: uuid.UUID
+) -> dict:
+    """
+    Get real-time statistics for the current day (since midnight).
+    Used for the live dashboard view.
+    """
+    now = datetime.now(timezone.utc)
+    # Get start of day in property's timezone (using UTC for MVP simplicity, ideally property-aware)
+    # TODO: Use property timezone
+    today_start = datetime.combine(datetime.now(timezone.utc).date(), datetime.min.time()).replace(tzinfo=timezone.utc)
+    
+    # Reuse logic from compute_daily_analytics but don't save to DB
+    # 1. Total inquiries
+    total_result = await db.execute(
+        select(func.count(Conversation.id)).where(
+            Conversation.property_id == property_id,
+            Conversation.started_at >= today_start,
+        )
+    )
+    total_inquiries = total_result.scalar() or 0
+    
+    # 2. After-hours inquiries
+    after_hours_result = await db.execute(
+        select(func.count(Conversation.id)).where(
+            Conversation.property_id == property_id,
+            Conversation.started_at >= today_start,
+            Conversation.is_after_hours == True,
+        )
+    )
+    after_hours_inquiries = after_hours_result.scalar() or 0
+    
+    # 3. After-hours responded
+    after_hours_responded_result = await db.execute(
+        select(func.count(Conversation.id.distinct())).where(
+            Conversation.property_id == property_id,
+            Conversation.started_at >= today_start,
+            Conversation.is_after_hours == True,
+            Conversation.id.in_(
+                select(Message.conversation_id).where(Message.role == "ai")
+            ),
+        )
+    )
+    after_hours_responded = after_hours_responded_result.scalar() or 0
+    
+    # 4. Leads captured
+    leads_result = await db.execute(
+        select(func.count(Lead.id)).where(
+            Lead.property_id == property_id,
+            Lead.captured_at >= today_start,
+        )
+    )
+    leads_captured = leads_result.scalar() or 0
+    
+    # 5. Estimated Revenue
+    # Get property ADR
+    prop_result = await db.execute(
+        select(Property.adr).where(Property.id == property_id)
+    )
+    adr = prop_result.scalar() or Decimal("230")
+    
+    # Sum after-hours leads value
+    leads_revenue_result = await db.execute(
+        select(Lead.estimated_value).where(
+            Lead.property_id == property_id,
+            Lead.captured_at >= today_start,
+            Lead.conversation_id.in_(
+                select(Conversation.id).where(Conversation.is_after_hours == True)
+            ),
+        )
+    )
+    
+    total_revenue = Decimal("0")
+    for row in leads_revenue_result.fetchall():
+        val = row[0]
+        if val is not None:
+            total_revenue += val
+        else:
+            total_revenue += adr
+
+    estimated_revenue = float(total_revenue)
+    
+    # 6. Response Time
+    response_times_result = await db.execute(
+        select(Message.metadata_["response_time_ms"]).where(
+            Message.conversation_id.in_(
+                select(Conversation.id).where(
+                    Conversation.property_id == property_id,
+                    Conversation.started_at >= today_start,
+                )
+            ),
+            Message.role == "ai",
+            Message.metadata_["response_time_ms"].isnot(None),
+        )
+    )
+    response_times = [
+        float(r[0]) / 1000.0
+        for r in response_times_result.fetchall()
+        if r[0] is not None
+    ]
+    avg_response_time = (
+        sum(response_times) / len(response_times) if response_times else 0
+    )
+    
+    # 7. Status Breakdown (Active vs Handoff) for Ops View
+    status_result = await db.execute(
+        select(Conversation.status, func.count(Conversation.id))
+        .where(
+            Conversation.property_id == property_id,
+            Conversation.started_at >= today_start,
+        )
+        .group_by(Conversation.status)
+    )
+    status_counts = {row[0]: row[1] for row in status_result.fetchall()}
+    active_conversations = status_counts.get("active", 0)
+    handed_off_conversations = status_counts.get("handed_off", 0)
+    
+    return {
+        "report_date": date.today().isoformat(),
+        "total_inquiries": total_inquiries,
+        "after_hours_inquiries": after_hours_inquiries,
+        "after_hours_responded": after_hours_responded,
+        "leads_captured": leads_captured,
+        "avg_response_time_sec": avg_response_time,
+        "estimated_revenue_recovered": estimated_revenue,
+        "active_conversations": active_conversations,
+        "handed_off_conversations": handed_off_conversations,
+    }

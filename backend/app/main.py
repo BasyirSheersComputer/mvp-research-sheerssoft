@@ -1,5 +1,5 @@
 """
-Floyd AI Inquiry Capture & Conversion Engine
+Nocturn AI Inquiry Capture & Conversion Engine
 Main FastAPI application.
 """
 
@@ -11,7 +11,20 @@ from fastapi.middleware.cors import CORSMiddleware
 import structlog
 
 from app.config import get_settings
+
+
+settings = get_settings()
+print(f"DEBUG: Loading settings. Environment: {settings.environment}")
+print(f"DEBUG: DATABASE_URL starts with: {settings.database_url.split('://')[0] if '://' in settings.database_url else 'INVALID'}")
+# Mask password
+safe_url = settings.database_url
+if "@" in safe_url:
+    prefix = safe_url.split("@")[1]
+    safe_url = f"redacted@{prefix}"
+print(f"DEBUG: DATABASE_URL value (masked): {safe_url}")
+
 from app.routes import router
+from app.websockets import router as ws_router
 from app.services.scheduler import start_scheduler, shutdown_scheduler
 from app.limiter import limiter
 
@@ -66,8 +79,21 @@ app = FastAPI(
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
+from app.middleware import TelemetryMiddleware
+app.add_middleware(TelemetryMiddleware)
+
 # CORS — allow all origins in dev, restrict in production
-origins = settings.allowed_origins.split(",") if settings.is_production else ["*"]
+if settings.is_production:
+    origins = settings.allowed_origins.split(",")
+else:
+    # In development, list explicit localhost ports to allow credentials
+    origins = [
+        "http://localhost:3000",
+        "http://localhost:8000",
+        "http://127.0.0.1:3000",
+        "http://127.0.0.1:8000",
+        "*" # Allow generic for now to support file:// or random test origins
+    ]
 
 app.add_middleware(
     CORSMiddleware,
@@ -79,9 +105,15 @@ app.add_middleware(
 
 # Include API routes
 app.include_router(router)
+app.include_router(ws_router)
 
-# Mount static files (for widget.js)
-app.mount("/static", StaticFiles(directory="static"), name="static")
+# Mount static files (for widget.js) - Pointing to sibling frontend directory
+import os
+frontend_path = os.path.join(os.path.dirname(__file__), "../../frontend/public")
+if os.path.exists(frontend_path):
+    app.mount("/static", StaticFiles(directory=frontend_path), name="static")
+else:
+    logger.warning("Frontend public directory not found, static files disabled", path=frontend_path)
 
 
 @app.get("/")

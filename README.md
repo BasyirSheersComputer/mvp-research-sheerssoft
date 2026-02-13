@@ -77,9 +77,9 @@ Once running, visit: http://localhost:8000/docs
 ## Sprint Status
 
 - [x] **Sprint 1:** AI Conversation Core (The Brain Works)
-- [ ] **Sprint 2:** WhatsApp + Web Widget + Email (Guests Can Reach Us)
-- [ ] **Sprint 3:** Dashboard + Analytics + Reports (The GM Sees the Money)
-- [ ] **Sprint 4:** Polish + Deploy + Pilot (Go Live at Vivatel)
+- [x] **Sprint 2:** WhatsApp + Web Widget + Email (Guests Can Reach Us)
+- [x] **Sprint 3:** Dashboard + Analytics + Reports (The GM Sees the Money)
+- [/] **Sprint 4:** Polish + Deploy + Pilot (Go Live at Vivatel)
 
-I've renamed the project references from "Floyd" to "SheersSoft" in the codebase.
+
 

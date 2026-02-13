@@ -241,14 +241,14 @@
             appendMessage('ai', data.response);
         } catch (error) {
             console.error('SheersSoft AI Error:', error);
-            document.getElementById('floyd-typing').style.display = 'none';
+            document.getElementById('sheerssoft-typing').style.display = 'none';
             appendMessage('ai', 'Sorry, I am having trouble connecting to the concierge. Please try again.');
         }
     }
 
-    document.getElementById('floyd-input').addEventListener('keypress', (e) => {
+    document.getElementById('sheerssoft-input').addEventListener('keypress', (e) => {
         if (e.key === 'Enter') sendMessage();
     });
-    chatWindow.querySelector('.floyd-send-btn').addEventListener('click', sendMessage);
+    chatWindow.querySelector('.sheerssoft-send-btn').addEventListener('click', sendMessage);
 
 })();

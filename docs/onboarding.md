@@ -45,7 +45,7 @@ If successful, it will output:
 1.  Go to [Meta for Developers](https://developers.facebook.com/).
 2.  Select the App and go to **WhatsApp > Configuration**.
 3.  Edit **Callback URL**: `https://<your-api-domain>/api/v1/webhook/whatsapp`
-4.  Verify Token: `floyd_verify_token` (as set in `.env`).
+4.  Verify Token: `nocturn_verify_token` (as set in `.env`).
 5.  Subscribe to `messages` webhook field.
 
 ## 4. Updates & Management

@@ -17,9 +17,8 @@ class MessageRequest(BaseModel):
 
 
 class ConversationResponse(BaseModel):
-    """Response returned after processing a guest message."""
     response: str
-    conversation_id: str
+    conversation_id: uuid.UUID
     mode: str
     is_after_hours: bool
     response_time_ms: int
@@ -37,8 +36,8 @@ class WebChatStartRequest(BaseModel):
 # ─── Leads ───
 
 class LeadResponse(BaseModel):
-    id: str
-    conversation_id: str
+    id: uuid.UUID
+    conversation_id: uuid.UUID
     guest_name: str | None
     guest_phone: str | None
     guest_email: str | None
@@ -59,13 +58,14 @@ class LeadUpdateRequest(BaseModel):
 # ─── Properties ───
 
 class PropertyResponse(BaseModel):
-    id: str
+    id: uuid.UUID
     name: str
     whatsapp_number: str | None
     website_url: str | None
     adr: float
     ota_commission_pct: float
-    created_at: datetime
+    created_at: datetime | None = None
+    deleted_at: datetime | None = None
 
     class Config:
         from_attributes = True

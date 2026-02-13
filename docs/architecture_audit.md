@@ -1,15 +1,15 @@
 # Architecture Audit Report
-## Floyd — AI Inquiry Capture & Conversion Engine
+## Nocturn AI — AI Inquiry Capture & Conversion Engine
 ### Independent Technical Review · 11 Feb 2026
 
 ---
 
 ## Audit Scope
 
-This report is a line-by-line audit of the Floyd backend codebase against three governing documents:
-- [PRD](file:///h:/Source/repos/mvp-research-floyd/docs/prd.md) — Product Requirements
-- [Architecture](file:///h:/Source/repos/mvp-research-floyd/docs/architecture.md) — System Architecture Specification
-- [Build Plan](file:///h:/Source/repos/mvp-research-floyd/docs/build_plan.md) — Sprint Plan & Quality Gates
+This report is a line-by-line audit of the Nocturn AI backend codebase against three governing documents:
+- [PRD](file:///h:/Source/repos/mvp-research-sheerssoft/docs/prd.md) — Product Requirements
+- [Architecture](file:///h:/Source/repos/mvp-research-sheerssoft/docs/architecture.md) — System Architecture Specification
+- [Build Plan](file:///h:/Source/repos/mvp-research-sheerssoft/docs/build_plan.md) — Sprint Plan & Quality Gates
 
 **Files audited:** `main.py`, `config.py`, `database.py`, `models.py`, `schemas.py`, `routes.py`, `limiter.py`, `services/__init__.py`, `services/conversation.py`, `services/analytics.py`, `services/whatsapp.py`, `services/email.py`, `services/scheduler.py`, `Dockerfile`, `docker-compose.yml`, test files, and scripts.
 
@@ -76,7 +76,7 @@ The Sprint 1 codebase establishes a sound foundation — the AI conversation eng
 
 **Spec:** Architecture §8.2 — "Meta webhook signature verification (X-Hub-Signature-256)"
 
-**Reality:** [routes.py L56-116](file:///h:/Source/repos/mvp-research-floyd/backend/app/routes.py#L56-L116) — The POST webhook blindly trusts all incoming payloads. Any actor can POST fake messages to `/api/v1/webhook/whatsapp`.
+**Reality:** [routes.py L56-116](file:///h:/Source/repos/mvp-research-sheerssoft/backend/app/routes.py#L56-L116) — The POST webhook blindly trusts all incoming payloads. Any actor can POST fake messages to `/api/v1/webhook/whatsapp`.
 
 **Impact:** An attacker can inject fake guest conversations, fill the database with junk leads, and waste LLM spend.
 
@@ -100,7 +100,7 @@ def verify_whatsapp_signature(request: Request):
 
 **Spec:** Architecture §5.2 — "Every query includes `property_id` as a mandatory filter."
 
-**Reality:** Both [routes.py L97-98](file:///h:/Source/repos/mvp-research-floyd/backend/app/routes.py#L97-L98) (WhatsApp) and [routes.py L203](file:///h:/Source/repos/mvp-research-floyd/backend/app/routes.py#L203) (email) fall back to `select(Property).limit(1)` when the property can't be matched.
+**Reality:** Both [routes.py L97-98](file:///h:/Source/repos/mvp-research-sheerssoft/backend/app/routes.py#L97-L98) (WhatsApp) and [routes.py L203](file:///h:/Source/repos/mvp-research-sheerssoft/backend/app/routes.py#L203) (email) fall back to `select(Property).limit(1)` when the property can't be matched.
 
 **Impact:** With multiple tenants, a webhook from Property B's WhatsApp could be processed against Property A's knowledge base. **This is a cross-tenant data violation.** Guests would receive answers from the wrong hotel.
 
@@ -129,7 +129,7 @@ ALTER TABLE analytics_daily ENABLE ROW LEVEL SECURITY;
 
 **Spec:** Architecture implies restricted CORS in production.
 
-**Reality:** [main.py L69-75](file:///h:/Source/repos/mvp-research-floyd/backend/app/main.py#L69-L75) — In production, `allow_origins=[]` is set (empty list), which actually **blocks all CORS** — meaning the dashboard won't work from any domain. And in dev, `allow_origins=["*"]` with `allow_credentials=True` is a known security anti-pattern.
+**Reality:** [main.py L69-75](file:///h:/Source/repos/mvp-research-sheerssoft/backend/app/main.py#L69-L75) — In production, `allow_origins=[]` is set (empty list), which actually **blocks all CORS** — meaning the dashboard won't work from any domain. And in dev, `allow_origins=["*"]` with `allow_credentials=True` is a known security anti-pattern.
 
 **Fix:**
 ```python
@@ -206,12 +206,12 @@ The architecture spec (§8.1) defines 17 endpoints. Current status:
 
 ### M4. Lifespan Not Wired to FastAPI Constructor
 
-**Reality:** [main.py L58-63](file:///h:/Source/repos/mvp-research-floyd/backend/app/main.py#L58-L63) — The `lifespan` function is defined but **never passed** to the `FastAPI()` constructor. The startup logic (pgvector extension, table creation, scheduler) **never runs**.
+**Reality:** [main.py L58-63](file:///h:/Source/repos/mvp-research-sheerssoft/backend/app/main.py#L58-L63) — The `lifespan` function is defined but **never passed** to the `FastAPI()` constructor. The startup logic (pgvector extension, table creation, scheduler) **never runs**.
 
 **Fix:**
 ```python
 app = FastAPI(
-    title="Floyd AI Inquiry Capture Engine",
+    title="Nocturn AI Inquiry Capture Engine",
     ...
     lifespan=lifespan,  # <-- ADD THIS
 )
@@ -283,7 +283,7 @@ class EncryptedString(TypeDecorator):
 
 **Spec:** Architecture §7.2 — "Relevance filter: only include items with similarity > 0.7."
 
-**Reality:** [services/__init__.py L106-113](file:///h:/Source/repos/mvp-research-floyd/backend/app/services/__init__.py#L106-L113) — All top-K results are returned regardless of similarity score. Low-relevance KB items may pollute the LLM context.
+**Reality:** [services/__init__.py L106-113](file:///h:/Source/repos/mvp-research-sheerssoft/backend/app/services/__init__.py#L106-L113) — All top-K results are returned regardless of similarity score. Low-relevance KB items may pollute the LLM context.
 
 **Fix:** Add a `WHERE` clause: `.where(KBDocument.embedding.cosine_distance(query_embedding) < 0.3)` (cosine distance < 0.3 ≈ similarity > 0.7).
 
@@ -291,7 +291,7 @@ class EncryptedString(TypeDecorator):
 
 ### N2. Email Service Uses Blocking SendGrid Client
 
-**Reality:** [email.py L50-52](file:///h:/Source/repos/mvp-research-floyd/backend/app/services/email.py#L50-L52) — Uses `loop.run_in_executor(None, sg.send, mail)` which runs the synchronous SendGrid client in a thread pool. This works but ties up a thread.
+**Reality:** [email.py L50-52](file:///h:/Source/repos/mvp-research-sheerssoft/backend/app/services/email.py#L50-L52) — Uses `loop.run_in_executor(None, sg.send, mail)` which runs the synchronous SendGrid client in a thread pool. This works but ties up a thread.
 
 **Fix (post-MVP):** Consider switching to httpx-based direct API calls for SendGrid, keeping the entire path async.
 
@@ -299,7 +299,7 @@ class EncryptedString(TypeDecorator):
 
 ### N3. No `db.commit()` After `resolve_conversation`
 
-**Reality:** [routes.py L440-455](file:///h:/Source/repos/mvp-research-floyd/backend/app/routes.py#L440-L455) — The `resolve_conversation` endpoint updates `conv.status` and `conv.ended_at` but relies on the `get_db` dependency's auto-commit. This works but the response is returned before the commit happens, creating a window where the client sees "resolved" but the DB hasn't persisted.
+**Reality:** [routes.py L440-455](file:///h:/Source/repos/mvp-research-sheerssoft/backend/app/routes.py#L440-L455) — The `resolve_conversation` endpoint updates `conv.status` and `conv.ended_at` but relies on the `get_db` dependency's auto-commit. This works but the response is returned before the commit happens, creating a window where the client sees "resolved" but the DB hasn't persisted.
 
 **Fix:** Add `await db.flush()` after the status update, consistent with other endpoints.
 
@@ -307,7 +307,7 @@ class EncryptedString(TypeDecorator):
 
 ### N4. Missing `dining` Category in KB Validation
 
-**Reality:** [schemas.py L89](file:///h:/Source/repos/mvp-research-floyd/backend/app/schemas.py#L89) — `KBDocumentInput.doc_type` pattern is `^(rates|rooms|facilities|faqs|directions|policies)$` but the Architecture spec §5.1 also lists `dining` as a valid category.
+**Reality:** [schemas.py L89](file:///h:/Source/repos/mvp-research-sheerssoft/backend/app/schemas.py#L89) — `KBDocumentInput.doc_type` pattern is `^(rates|rooms|facilities|faqs|directions|policies)$` but the Architecture spec §5.1 also lists `dining` as a valid category.
 
 ---
 
@@ -325,7 +325,7 @@ class EncryptedString(TypeDecorator):
 
 ### N7. Data Retention: Only Deletes Leads, Not Conversations
 
-**Reality:** [scheduler.py L148-167](file:///h:/Source/repos/mvp-research-floyd/backend/app/services/scheduler.py#L148-L167) — `delete_old_leads()` only purges leads. Conversations and messages containing PII (`guest_name`, `guest_identifier`, message content) are never purged. This violates the Architecture spec §10.1 data retention policy.
+**Reality:** [scheduler.py L148-167](file:///h:/Source/repos/mvp-research-sheerssoft/backend/app/services/scheduler.py#L148-L167) — `delete_old_leads()` only purges leads. Conversations and messages containing PII (`guest_name`, `guest_identifier`, message content) are never purged. This violates the Architecture spec §10.1 data retention policy.
 
 ---
 

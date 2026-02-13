@@ -30,7 +30,7 @@ async def get_vivatel_property_id():
 
 
 async def chat_session():
-    print("🤖 Floyd AI Manual Chat Interface")
+    print("🤖 Nocturn AI Manual Chat Interface")
     print("---------------------------------")
     print("Connecting to backend...")
     

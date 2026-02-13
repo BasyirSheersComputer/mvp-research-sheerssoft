@@ -1,6 +1,7 @@
 # Product Requirements Document (PRD)
-## Floyd — AI Inquiry Capture & Conversion Engine
-### Version 1.0 · 11 Feb 2026
+## Nocturn AI — AI Inquiry Capture & Conversion Engine
+### Version 1.2 · 13 Feb 2026
+### Aligned with [product_context.md](./product_context.md) · Steered by [building-successful-saas-guide.md](./building-successful-saas-guide.md)
 
 ---
 
@@ -27,22 +28,27 @@ Meanwhile, hotels pay **15–25% commission** on every OTA booking. Every direct
 | 3 | **Zero burden on hotel staff** | One `<script>` tag for the widget. One WhatsApp number linked. No training manual. No IT department required. |
 | 4 | **Honest AI** | Never fabricate rates or availability. When unsure, hand off to a human with full context. Trust is the product. |
 | 5 | **Show, don't tell** | The dashboard is the sales pitch. If the GM opens it every morning, we win. If they don't, we've failed. |
+| 6 | **Live in 48 Hours** | Onboarding must be frictionless. No complex IT integrations. Forward an email, drop a script tag, and go live. |
 
 ---
 
 ## 3. Target Customer
 
-### Primary ICP (Ideal Customer Profile)
+### Primary ICP (Ideal Customer Profile) — Ruthlessly Narrow
 
-| Attribute | Value |
-|---|---|
-| **Property Type** | Independent and mid-tier brand hotels (3–4 star) |
-| **Size** | 50–300 rooms |
-| **Location** | Malaysia (initial market) |
-| **Booking Mix** | >50% manual channels (WhatsApp, phone, email, walk-in) |
-| **Pain Signal** | No after-hours inquiry coverage; small reservations team (2–5 people) |
-| **Decision Maker** | GM or Revenue Manager (NOT IT) |
-| **Budget** | RM 1,500–5,000/month |
+> *"Pick the smallest viable market segment that can sustain your business. You can expand later."* — Vertical solution beats horizontal platform.
+
+| Attribute | Value | Rationale |
+|---|---|---|
+| **Property Type** | Independent and mid-tier brand hotels (3–4 star) only | Budget lacks margin; 5-star has enterprise procurement |
+| **Size** | 50–300 rooms | Sweet spot for inquiry volume and sales cycle |
+| **Location** | Malaysia (initial market) | PDPA, BM/EN, local relationships. No regional sprawl until PMF |
+| **Booking Mix** | >50% manual channels (WhatsApp, phone, email, walk-in) | OTAs don't need this. Must have after-hours gap |
+| **Pain Signal** | No after-hours inquiry coverage; 2–5 person reservations team; >20 inquiries/day | Pre-qualify. Low volume = can't prove ROI |
+| **Decision Maker** | GM or Revenue Manager (NOT IT) | IT blocks deals. GMs care about revenue |
+| **Budget** | RM 1,500–5,000/month | Value-based: 10–30% of RM 3,000–12,000 recovered |
+
+**Explicitly NOT in v1:** Budget hostels, Airbnb-style, 5-star chains, properties with <15 inquiries/day.
 
 ### User Personas
 
@@ -162,22 +168,43 @@ Meanwhile, hotels pay **15–25% commission** on every OTA booking. Every direct
 | **Response Latency** | Guest message → AI first response | <30 seconds |
 | **Human Handoff Rate** | % escalated to staff | <20% |
 | **Lead Capture Rate** | % of conversations with contact info collected | >60% |
-| **Estimated Revenue Recovered** | After-hours × conversion × ADR | RM 5,000+/month |
+| **Estimated Revenue Recovered** | After-hours × conversion × ADR | RM 3,000–12,000+/month (pilot data: RM 12,400 in 30 days) |
 
 ### Business KPIs (Internal — What We Track)
 
-| Metric | 60-Day Target |
-|---|---|
-| Active Pilots | 5 |
-| Paying Customers | 10 |
-| MRR | RM 20,000+ |
-| Pilot → Paid Conversion | >60% |
-| Monthly Churn | <10% |
-| NPS (hotel staff) | >40 |
+| Metric | 60-Day Target | Red Flag |
+|---|---|---|
+| Active Pilots | 5 | — |
+| Paying Customers | 10 | — |
+| MRR | RM 20,000+ | — |
+| Pilot → Paid Conversion | >60% | Below 50% = value prop weak |
+| Monthly Churn | <5% (B2B benchmark) | >10% = product problem, not sales |
+| NPS (hotel staff) | >40 | — |
+
+### Unit Economics (Survival Metrics — Track from First Paying Customer)
+
+| Metric | Target | Action if Missed |
+|--------|--------|------------------|
+| LTV:CAC ratio | ≥ 3:1 | Stop scaling acquisition until fixed |
+| CAC payback period | < 12 months | Lengthen = cash flow risk |
+| Gross margin | > 80% | Already met at 10 properties |
+
+### PMF Signals (Product-Market Fit)
+
+| Signal | PMF Present | PMF Absent |
+|--------|-------------|------------|
+| Inbound | Increasing organically | Linear with marketing spend |
+| Sales cycle | Shortening | Every deal a push |
+| Churn reasons | Voluntary (budget, change of strategy) | Product complaints, "not useful" |
+| Feature requests | Enterprise asks (SSO, contracts) | Constant core-feature complaints |
+
+**Rule:** Customers pulling you forward = PMF. Pushing every deal = not yet.
 
 ---
 
-## 6. Pricing
+## 6. Pricing — Value-Based, Not Cost-Plus
+
+> *"B2B customers don't trust cheap software. Charge 10–30% of value created."*
 
 | Tier | Price | Target Segment | Includes |
 |---|---|---|---|
@@ -185,7 +212,11 @@ Meanwhile, hotels pay **15–25% commission** on every OTA booking. Every direct
 | **Professional** | RM 3,000/mo | 4-star, 100–300 rooms | 2 WhatsApp lines, web widget, email handling, 2,000 conversations/mo, full dashboard + reports |
 | **Enterprise** | RM 5,000+/mo | 5-star, 300+ rooms | Unlimited lines, custom AI training, priority support, API access |
 
-**Pilot Offer (first 10 customers):** 30 days FREE → auto-converts to paid. No credit card required. Prove value before asking for money.
+**Pricing rationale:** RM 3,000–12,000 recovered/mo (pilot: RM 12,400) → RM 1,500–5,000 = 12–40% of value. Defensible.
+
+**Pilot Offer:** 30 days FREE, time-limited only (not feature-limited). No credit card. Prove value before asking for money.
+
+**Sales motion:** Starter/Pro = sales-assisted. Enterprise = full sales process. Don't build enterprise infra for RM 1,500 product.
 
 ---
 
@@ -198,22 +229,29 @@ Meanwhile, hotels pay **15–25% commission** on every OTA booking. Every direct
 | PDPA compliance gaps | Legal risk | Encrypt all PII at rest. Data isolation per property. Privacy policy. Data retention controls. |
 | Hotel IT blocks widget | Can't deploy on property website | Single `<script>` tag. Offer to install. Most hotel sites are WordPress. |
 | Low inquiry volume at pilot property | Can't prove ROI | Pre-qualify properties with >20 inquiries/day. Target Vivatel (30+/day confirmed). |
+| **"Build it and they will come"** | No customers despite product | Distribution strategy from day one. Case study → demos. 3–5 customer calls/week. |
+| **Underpricing** | Need 10x customers for same revenue; tire-kickers churn | Value-based pricing. RM 1,500+ floor. Validate willingness to pay. |
+| **CAC > LTV** | Buying revenue at a loss | Track unit economics from first customer. Stop scaling if LTV:CAC < 3. |
 
 ---
 
-## 8. Go-To-Market
+## 8. Go-To-Market — Distribution Strategy from Day One
+
+> *"You need distribution strategy from day one. 'Build it and they will come' kills companies."* — First 10 customers are design partners; over-serve them.
 
 ### Launch Sequence
 
-1. **Vivatel KL (Zul)** — Already agreed to pilot. 90% manual bookings, 30+ daily touchpoints, zero after-hours coverage. Deploy first.
-2. **Novotel KLCC (Shamsuridah)** — 100 emails/day, 30% manual. Relationship established.
-3. **Ibis Styles KL, Melia KL, Tamu Hotel** — Warm pipeline from CRM outreach.
-4. **SKS Hospitality (Bob's referral)** — Active franchising = fresh properties with fresh budgets.
-5. **Cold expansion** — Armed with Vivatel case study data.
+1. **Vivatel KL (Zul)** — Design partner #1. 90% manual, 30+ daily touchpoints, zero after-hours. Deploy first. Do things that don't scale: hop on calls, custom support.
+2. **Novotel KLCC (Shamsuridah)** — 100 emails/day. Relationship established.
+3. **Ibis Styles KL, Melia KL, Tamu Hotel** — Warm pipeline. Book demos using Vivatel case study.
+4. **SKS Hospitality (Bob's referral)** — Referrals beat cold outreach 10:1.
+5. **Cold expansion** — Only after Vivatel case study with real numbers. Proof, not promises.
+
+**Churn analysis:** Track why every churned customer leaves. >5% monthly churn = immediate product attention.
 
 ### The 60-Second Pitch
 
-> *"Your hotel gets 30+ inquiries a day via WhatsApp and email. After 6pm, nobody answers. Our AI captures every single inquiry, responds in under 30 seconds — 24/7 — and hands you a daily report showing exactly how many leads would have been lost. Hotels like yours save RM 3,000–5,000/month in OTA commissions by converting just a fraction of those direct inquiries into bookings."*
+> *"Your hotel gets 30+ inquiries a day via WhatsApp and email. After 6pm, nobody answers. Our AI captures every single inquiry, responds in under 30 seconds — 24/7 — and hands you a daily report showing exactly how many leads would have been lost. Hotels like yours recover RM 3,000–12,000+/month (pilot: RM 12,400 in 30 days) and cut OTA commissions by capturing direct bookings."*
 
 ---
 
@@ -228,4 +266,4 @@ Meanwhile, hotels pay **15–25% commission** on every OTA booking. Every direct
 
 ---
 
-*This document is the source of truth for what Floyd v1 ships. If a feature isn't listed in Section 4.1, it doesn't exist in v1. Scope discipline is the difference between shipping in 28 days and shipping never.*
+*This document is the source of truth for what Nocturn AI v1 ships. If a feature isn't listed in Section 4.1, it doesn't exist in v1. Scope discipline is the difference between shipping in 28 days and shipping never. Context validated against [product_context.md](./product_context.md).*

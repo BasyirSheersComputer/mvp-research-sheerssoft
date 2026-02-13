@@ -48,6 +48,72 @@ async def verify_jwt(token: str = Depends(oauth2_scheme)) -> dict:
         raise credentials_exception
 
 
+async def check_property_access(
+    property_id: str,
+    token: dict = Depends(verify_jwt)
+) -> dict:
+    """
+    Dependency to enforce property isolation.
+    Ensures the authenticated user has access to the requested property.
+    """
+    # 1. Check if super admin
+    if token.get("is_admin") and "*" in token.get("property_ids", []):
+         return token
+
+    # 2. Check specific property access
+    allowed_props = token.get("property_ids", [])
+    if property_id not in allowed_props:
+        logger.warning(
+            "Unauthorized property access attempt",
+            user=token.get("sub"),
+            target_property=property_id,
+            allowed_properties=allowed_props
+        )
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="You do not have access to this property"
+        )
+    
+    return token
+
+
+async def verify_sendgrid_signature(request: Request):
+    """
+    Verify SendGrid Signed Webhook.
+    Requires Ed25519 verification.
+    """
+    if not settings.sendgrid_webhook_public_key:
+        if settings.is_production:
+             logger.warning("SendGrid webhook signature verification disabled in production")
+        return
+
+    from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
+    import base64
+
+    signature = request.headers.get("X-Twilio-Email-Event-Webhook-Signature")
+    timestamp = request.headers.get("X-Twilio-Email-Event-Webhook-Timestamp")
+
+    if not signature or not timestamp:
+        logger.warning("Missing SendGrid signature headers")
+        # For now, allowing it if key is missing/empty, but if key is present, we enforce it.
+        # If user configured the key, they expect enforcement.
+        raise HTTPException(status_code=403, detail="Missing signature")
+
+    # Construct payload: timestamp + raw body
+    body = await request.body()
+    payload = timestamp.encode() + body
+
+    try:
+        public_key_bytes = base64.b64decode(settings.sendgrid_webhook_public_key)
+        public_key = Ed25519PublicKey.from_public_bytes(public_key_bytes)
+        decoded_signature = base64.b64decode(signature)
+        
+        public_key.verify(decoded_signature, payload)
+    except Exception as e:
+        logger.warning("Invalid SendGrid signature", error=str(e))
+        raise HTTPException(status_code=403, detail="Invalid signature")
+
+
 async def verify_api_key(
     request: Request,
     api_key: Optional[str] = Depends(api_key_header)

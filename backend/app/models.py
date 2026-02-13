@@ -67,7 +67,9 @@ class Property(Base):
     # Add server_default to avoid NotNullViolation on existing rows
     timezone: Mapped[str] = mapped_column(String(50), default="Asia/Kuala_Lumpur", server_default="Asia/Kuala_Lumpur")
     plan_tier: Mapped[str] = mapped_column(String(20), default="pilot", server_default="pilot")
+    plan_tier: Mapped[str] = mapped_column(String(20), default="pilot", server_default="pilot")
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, server_default="true")
+    deleted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
 
     # Relationships
     conversations: Mapped[list["Conversation"]] = relationship(
@@ -118,6 +120,7 @@ class Conversation(Base):
         DateTime(timezone=True), server_default=func.now()
     )
     ended_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    deleted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     message_count: Mapped[int] = mapped_column(Integer, default=0, server_default="0")
 
     # Relationships
@@ -160,6 +163,7 @@ class Message(Base):
     sent_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now()
     )
+    deleted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
 
     # Relationships
     conversation: Mapped["Conversation"] = relationship(back_populates="messages")
@@ -201,6 +205,7 @@ class Lead(Base):
     captured_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now()
     )
+    deleted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
 
     # Relationships
     conversation: Mapped["Conversation"] = relationship(back_populates="lead")
